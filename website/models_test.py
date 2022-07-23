@@ -26,7 +26,7 @@ class User(db.Model, UserMixin):
     nif = db.Column(db.Integer)
     address = db.Column(db.String(200))
     phone = db.Column(db.Integer)
-    created = db.Column(db.DateTime(timezone=True), default=func.now())
+    date_created = db.Column(db.DateTime(timezone=True), default=func.now())
     cart = db.relationship('Cart')
 
 

@@ -5,7 +5,6 @@
   {% for note in user.notes %}
   <li class="list-group-item">
     {{ note.data }}
-    <!-- <button type="button" class="close"  onClick="deleteNote({{ note.id }})"> -->
     <a href="/delete-note/{{ note.id }}" class="close">
       <span aria-hidden="true">&times;</span>
     </a>

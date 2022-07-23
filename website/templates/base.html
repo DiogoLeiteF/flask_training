@@ -5,6 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}Home{% endblock %}</title>
+
+    <!-- bootstrap -->
     <link
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
@@ -16,6 +18,16 @@
       href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
       crossorigin="anonymous"
     />
+    <!-- google fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- local css -->
+    <link rel="stylesheet" href="../static/little.css" />
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -29,22 +41,50 @@
       </button>
       <div class="collapse navbar-collapse" id="navbar">
         <div class="navbar-nav">
+          <span class="nav-item nav-link" id="store_id"
+            >IT<span style="color: red">MEGA</span
+            ><span style="font-size: 0.7rem">store</span></span
+          >
+
           {% if user.is_authenticated %}
           <span class="nav-item nav-link"
-            >Hello <b>{{ user['first_name'] }}</b></span
+            >Hello <b>{{ user.first_name }}</b></span
           >
-          <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
+
+          {% if user.user_type == 'user' %}
           <a class="nav-item nav-link" id="home" href="/">Home</a>
-          {% else %}
-          <a class="nav-item nav-link" id="home" href="/">Home</a>
-          <a class="nav-item nav-link" id="login" href="/login">Login</a>
-          <a class="nav-item nav-link" id="signup" href="/sign-up">Sign Up</a>
-          <a class="nav-item nav-link" id="admin" href="/admin">Admin</a>
           <a class="nav-item nav-link" id="user" href="/user">User</a>
+          <a class="nav-item nav-link" id="cart" href="/cart">Cart</a>
+          <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
+          {% elif user.user_type == 'supplier'%}
+          <a class="nav-item nav-link" id="home" href="/">Home</a>
           <a class="nav-item nav-link" id="supplier" href="/supplier"
             >Supplier</a
           >
           <a class="nav-item nav-link" id="cart" href="/cart">Cart</a>
+          <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
+          {% elif user.user_type == 'admin'%}
+          <a class="nav-item nav-link" id="home" href="/">Home</a>
+          <a class="nav-item nav-link" id="admin" href="/admin">Admin</a>
+          <a class="nav-item nav-link" id="user" href="/user">User</a>
+          <a class="nav-item nav-link" id="cart" href="/cart">Cart</a>
+          <a class="nav-item nav-link" id="supplier" href="/supplier"
+            >Supplier</a
+          >
+          <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
+          {% endif %} {% else %}
+          <a class="nav-item nav-link" id="home" href="/">Home</a>
+          <a class="nav-item nav-link" id="login" href="/login">Login</a>
+          <a class="nav-item nav-link" id="signup" href="/sign-up">Sign Up</a>
+
+<!-- just for testing -->
+
+          <a class="nav-item nav-link" id="user" href="/user">User</a>
+          <a class="nav-item nav-link" id="cart" href="/cart">Cart</a>
+          <a class="nav-item nav-link" id="supplier" href="/supplier"
+            >Supplier</a
+          >
+          <a class="nav-item nav-link" id="admin" href="/admin">Admin</a>
 
           {% endif %}
         </div>
@@ -69,7 +109,16 @@
     </div>
     {% endif %} {% endfor %} {% endif %} {% endwith %}
 
-    <div class="container">{% block content %} {% endblock %}</div>
+    <div class="container main">{% block content %} {% endblock %}</div>
+
+    <footer class="site-footer">
+      <div class="container">
+        <span class="nav-item nav-link" id="store_id" align="center"
+          >IT<a href="/" id="mega"><span>MEGA</span></a
+          ><span style="font-size: 0.7rem">store</span></span
+        >
+      </div>
+    </footer>
 
     <script
       src="https://code.jquery.com/jquery-3.2.1.slim.min.js"

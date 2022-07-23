@@ -2,5 +2,27 @@
 content %}
 
 <h1>Admin</h1>
+<h2>user list</h2>
+<div class="container-users">
+  <ul>
+    {% for usr in users %}
+    <li>
+      <div>
+        {{ usr.id }} {{ usr.email }} {{ usr.first_name }} {{ usr.last_name }} {{
+        usr.nif }} {{ usr.address }} {{usr.phone}} {{ usr.user_type }}
+      </div>
+      <div>
+        <!-- Make supplier -->
+        <a href="/make-supplier/{{ usr.id }}">Supplier</a>
 
+        <!-- make admin -->
+        <a href="/make-admin/{{ usr.id }}">ADMIN</a>
+
+        <!-- delete user -->
+        <a href="/delete-user/{{ usr.id }}">DELETE</a>
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
 {% endblock %}

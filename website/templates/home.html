@@ -1,6 +1,41 @@
 {% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
-    %}
-    <h1 align="center">store front</h1>
+%}
+<header
+  class="site-header section-padding d-flex justify-content-center align-items-center"
+>
+  <div class="container site-header">
+    <h1>
+      <span class="choose">Choose your</span>
+      <span class="stuffs">favorite stuffs</span>
+    </h1>
+  </div>
+</header>
 
-    {% endblock %}
-    
+<!-- products -->
+<div class="products_container">
+  {% for i in range(6) %}
+
+  <div class="col-lg-4 col-12 mb-3">
+    <div class="product-thumb">
+      <img
+        src="../static/img/{{i+1}}.jpeg"
+        class="img-fluid product-image"
+        alt=""
+      />
+      <div class="product-info d-flex">
+        <div>
+          <h5 class="product-title mb-0">Tree pot</h5>
+
+          <p class="product-p">Original package design from house</p>
+        </div>
+
+        <small class="product-price text-muted ms-auto">$25</small>
+      </div>
+      <div>
+        <a href="" class="btn btn-dark">add to cart</a>
+      </div>
+    </div>
+  </div>
+
+  {% endfor %} {% endblock %}
+</div>
