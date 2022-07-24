@@ -13,23 +13,25 @@
 
 <!-- products -->
 <div class="products_container">
-  {% for i in range(6) %}
+  {% for prod in products %}
 
   <div class="col-lg-4 col-12 mb-3">
     <div class="product-thumb">
       <img
-        src="../static/img/{{i+1}}.jpeg"
+        src="../static/img/{{ prod.prod_id }}.jpeg"
         class="img-fluid product-image"
         alt=""
       />
       <div class="product-info d-flex">
         <div>
-          <h5 class="product-title mb-0">Tree pot</h5>
+          <h5 class="product-title mb-0">{{ prod.name }}</h5>
 
-          <p class="product-p">Original package design from house</p>
+          <p class="product-p">{{ prod.description }}</p>
         </div>
 
-        <small class="product-price text-muted ms-auto">$25</small>
+        <small class="product-price text-muted ms-auto"
+          >{{ prod.retail_price }}</small
+        >
       </div>
       <div>
         <a href="" class="btn btn-dark">add to cart</a>

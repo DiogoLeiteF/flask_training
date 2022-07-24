@@ -57,6 +57,32 @@ h3{
     justify-content: center;
 }
 
+/* --------------------------------------
+    ADMIN PAGE - USERS LIST
+---------------------------------------- */
+
+.container-users{
+    max-height: 50vh;
+    overflow:scroll;
+}
+
+.user_list {
+    display: inline-block;
+    width: 68%;
+    height: auto;
+}
+
+.user_list p {
+    width: 100%;
+    padding: 10px;
+    border-bottom: 2px solid black;
+}
+
+.user_list_btn {
+    display: inline-block;
+    width: 29%;
+}
+
 
 /*--------------------------------------
      forms 

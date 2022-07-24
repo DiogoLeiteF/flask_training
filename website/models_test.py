@@ -30,7 +30,7 @@ class User(db.Model, UserMixin):
     cart = db.relationship('Cart')
 
 
-class Stock(db.Model):
+class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(150), unique=True)
     description = db.Column(db.String(200))
@@ -41,4 +41,4 @@ class Stock(db.Model):
     stock = db.Column(db.Integer, default=0)
     stock_prev = db.Column(db.Integer, default=0)
     sold = db.Column(db.Integer, default=0)
-    cart = db.relationship('Cart')
+    # cart = db.relationship('Cart')
