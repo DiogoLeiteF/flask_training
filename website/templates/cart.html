@@ -2,20 +2,59 @@
 %}
 <h1 align="center">Cart</h1>
 <ul class="list-group list-group-flush" id="notes">
-  {% for note in user.notes %}
+  <!-- NOT WORKING -->
+
+  {% for key, value in cart.items() %} {% for product in products %} {% if key
+  == product.prod_id %}
+
   <li class="list-group-item">
-    {{ note.data }}
-    <a href="/delete-note/{{ note.id }}" class="close">
+    <strong>Name: </strong>{{ product.name }} |||
+    <strong>Description: </strong>{{product.description}} |||<strong
+      >Price: </strong
+    >{{product.retail_price}}€ ||| <strong>Quantity: </strong>{{ value }} |||
+    <strong>Total: </strong>{{product.retail_price * value}}€
+    <a
+      href="/cart/delete/{{ product.prod_id }}/{{ user.id }}"
+      class="close"
+      style="color: red"
+    >
       <span aria-hidden="true">&times;</span>
     </a>
+    <a href="/cart/add/{{ product.prod_id }}/{{ user.id }}" class="close">
+      <span aria-hidden="true">&plus;</span>
+    </a>
+    <a href="/cart/remove/{{ product.prod_id }}/{{ user.id }}" class="close">
+      <span aria-hidden="true">&minus;</span>
+    </a>
   </li>
-  {% endfor %}
+  {% endif %} {% endfor %} {% endfor %}
 </ul>
-<form action="" method="POST">
-  <textarea name="note" id="note" class="form-control"></textarea>
+<br />
+<div>
+  <p align="center" class="list-group-item">
+    Cart Total: <strong>{{ total }}€</strong>
+  </p>
+</div>
+<br />
+<div>
+  <h4>Check delivery information before go any further:</h4>
   <br />
+  <p>Name: {{ user.first_name }} {{ user.last_name }}</p>
+  <p>Address: {{ user.address }}</p>
+  <p>NIF: {{ user.nif }}</p>
+  <p>Phone Number: {{ user.phone }}</p>
+  <p>Email: {{ user.email }}</p>
+</div>
+<br />
+
+<form action="" method="POST">
+  <textarea name="delivery-note" id="note" class="form-control">
+Delivery notes:</textarea
+  >
+  <br />
+
   <div align="center">
-    <button type="submit" class="btn btn-primary">Add Note</button>
+    <button type="submit" class="btn btn-dark">Buy</button>
   </div>
 </form>
 {% endblock %}

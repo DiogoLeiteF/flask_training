@@ -4,11 +4,13 @@ from flask_login import UserMixin
 from sqlalchemy.sql import func
 
 
-class Cart(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    data = db.Column(db.String(10000))
-    date = db.Column(db.DateTime(timezone=True), default=func.now())
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+class Sale(db.Model):
+    sale_id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.ForeignKey('user.id'))
+    material = db.Column(db.String(300))
+    date_created = db.Column(db.DateTime(timezone=True), default=func.now())
+    delivery_notes = db.Column(db.String(200))
+    status = db.Column(db.String(30), default='Awaits Payment')
 
 
 class User(db.Model, UserMixin):
@@ -22,7 +24,8 @@ class User(db.Model, UserMixin):
     phone = db.Column(db.Integer, default=000000000)
     date_created = db.Column(db.DateTime(timezone=True), default=func.now())
     user_type = db.Column(db.String(20), default='user')
-    # cart = db.relationship('Cart')
+    cart = db.Column(db.String(200), default='')
+    buys = db.relationship('Sale')
 
 
 class Product(db.Model):
@@ -38,3 +41,5 @@ class Product(db.Model):
     stock = db.Column(db.Integer, default=0)
     stock_prev = db.Column(db.Integer, default=100)
     sold = db.Column(db.Integer, default=0)
+
+

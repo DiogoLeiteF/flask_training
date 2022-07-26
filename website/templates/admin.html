@@ -15,14 +15,8 @@
       </p>
     </div>
     <div class="user_list_btn">
-      <!-- make user -->
-      <a href="/make/user/{{ usr.id }}" class="btn btn-dark">User</a>
-
-      <!-- Make supplier -->
-      <a href="/make/supplier/{{ usr.id }}" class="btn btn-dark">Supplier</a>
-
-      <!-- make admin -->
-      <a href="/make/admin/{{ usr.id }}" class="btn btn-dark">ADMIN</a>
+      <!-- change user type -->
+      <a href="/change-type/{{ usr.id }}" class="btn btn-dark">User Type</a>
 
       <!-- delete user -->
       <a href="/delete-user/{{ usr.id }}" class="btn btn-danger">DELETE</a>
@@ -40,16 +34,13 @@
     {% for prod in products %}
     <div class="user_list">
       <p>
-        prod_id: {{ prod.prod_id }} | Description: {{ prod.description }} | Supplier:
-        {{ prod.supplier }} | Supplier Price: {{ prod.supplier_price }} | Retal
-        Price: {{ prod.retail_price }} | Warehouse Location: {{
+        prod_id: {{ prod.prod_id }} | Description: {{ prod.description }} |
+        Supplier: {{ prod.supplier }} | Supplier Price: {{ prod.supplier_price
+        }} | Retal Price: {{ prod.retail_price }} | Warehouse Location: {{
         prod.warehouse_location }} | Stock (current): {{ prod.stock }} | Desired
         Stock: {{ prod.stock_prev }} | Sold: {{ prod.sold }}
       </p>
     </div>
-
-
-
 
     {% endfor %}
   </ul>
@@ -93,7 +84,7 @@
   <div class="form-group">
     <label for="supplier_price">Supplier Price</label>
     <input
-      type="text"
+      type="number"
       class="form-control"
       id="supplier_price"
       name="supplier_price"
@@ -104,7 +95,7 @@
   <div class="form-group">
     <label for="price">Retail Price</label>
     <input
-      type="text"
+      type="number"
       class="form-control"
       id="price"
       name="retail_price"
@@ -126,7 +117,7 @@
   <div class="form-group">
     <label for="stock">Product Stock</label>
     <input
-      type="text"
+      type="number"
       class="form-control"
       id="stock"
       name="stock"
@@ -137,7 +128,7 @@
   <div class="form-group">
     <label for="stock-prev">Product Desired Stock</label>
     <input
-      type="text"
+      type="number"
       class="form-control"
       id="stock-prev"
       name="stock_prev"

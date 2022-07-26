@@ -1,9 +1,10 @@
 from flask import Blueprint, flash, redirect, render_template, request, flash, jsonify, url_for
 from flask_login import login_required, current_user
-from .models import User, Product
+from .models import User, Product, Sale
 from . import db
 import json
 from sqlalchemy import update, text
+import ast
 
 
 views = Blueprint('views', __name__)
@@ -28,6 +29,29 @@ def home():
     return render_template('home.html', user=current_user, products=products)
 
 
+@views.route('/add-to-cart/<user_id>/<prod_id>')
+@login_required
+def add_to_cart(user_id, prod_id):
+    prod = Product.query.filter_by(prod_id=int(prod_id)).first()
+    user = User.query.filter_by(id=int(user_id)).first()
+
+    # just for testing
+    # user.cart = '{}'
+
+    cart_dic = ast.literal_eval(user.cart)
+    if prod.prod_id not in cart_dic:
+        cart_dic[prod.prod_id] = 1
+    else:
+        cart_dic[prod.prod_id] += 1
+
+    user.cart = str(cart_dic)
+
+    db.session.add(user)
+    db.session.commit()
+    # print(user.cart)
+    return redirect(url_for('views.home', ))
+
+
 @views.route('/user')
 def user():
     return render_template('user.html', user=current_user)
@@ -45,12 +69,8 @@ def admin():
     return render_template('admin.html', user=current_user, users=users, products=products)
 
 
-@views.route('/cart', methods=['GET', 'POST'])
-def cart():
-    return render_template('/cart.html', user=current_user)
-
-
 @views.route('/delete-user/<id>')
+# @login_required
 def delete_user(id):
     user = User.query.filter_by(id=int(id)).delete()
     db.session.commit()
@@ -58,16 +78,19 @@ def delete_user(id):
     return redirect(url_for('views.admin'))
 
 
-@views.route('/make/<type>/<id>')
+@views.route('/change-type/<id>')
 # @login_required
-def make_supplier(type, id):
+def change_type(id):
     user = User.query.filter_by(id=int(id)).first()
-    if type == 'user':
-        user.user_type = 'user'
-    elif type == 'supplier':
+    if user.user_type == 'user':
         user.user_type = 'supplier'
-    elif type == 'admin':
+        flash('User Type Changed to SUPPLIER', category='success')
+    elif user.user_type == 'supplier':
         user.user_type = 'admin'
+        flash('User Type Changed to ADMIN', category='success')
+    elif user.user_type == 'admin':
+        user.user_type = 'user'
+        flash('User Type Changed to USER', category='success')
     db.session.add(user)
     db.session.commit()
     return redirect(url_for('views.admin'))
@@ -97,6 +120,98 @@ def add_prod():
     return render_template('sign_up.html', user=current_user)
 
 
+@views.route('/cart/<id>', methods=['GET', 'POST'])
+@login_required
+def cart(id):
+    products = Product.query.all()
+    user = User.query.filter_by(id=int(id)).first()
+    cart = ast.literal_eval(user.cart)
+    total = 0
+    for key, value in cart.items():
+        for product in products:
+            if product.prod_id == key:
+                total += product.retail_price * value
+
+    if request.method == 'POST':
+        if user.cart != '{}':
+            note = request.form.get('delivery-note')
+            new_sale = Sale(delivery_notes=note,
+                            user_id=current_user.id, material=current_user. cart)
+            db.session.add(new_sale)
+            for key, value in cart.items():
+                for product in products:
+                    if product.prod_id == key:
+                        product.stock -= value
+                        product.sold += value
+
+            user.cart = '{}'
+            db.session.commit()
+            flash('Your order has been created', category='success')
+            return redirect(url_for('views.home'))
+        else:
+            flash('Your cart is empty!', category='error')
+            return redirect(url_for('views.home'))
+
+
+    return render_template('/cart.html', user=current_user, products=products, cart=cart, total=total)
+
+
+@views.route('/cart/remove/<prod_id>/<id>')
+@login_required
+def cart_rm(prod_id, id):
+    user = User.query.filter_by(id=int(id)).first()
+    product = Product.query.filter_by(prod_id=int(prod_id)).first()
+
+    cart_dic = ast.literal_eval(user.cart)
+
+    cart_dic[product.prod_id] -= 1
+    if cart_dic[product.prod_id] == 0:
+        del cart_dic[product.prod_id]
+
+    user.cart = str(cart_dic)
+
+    db.session.add(user)
+    db.session.commit()
+
+    return redirect(url_for('views.cart', id=user.id))
+
+
+@views.route('/cart/add/<prod_id>/<id>')
+@login_required
+def cart_add(prod_id, id):
+    user = User.query.filter_by(id=int(id)).first()
+    product = Product.query.filter_by(prod_id=int(prod_id)).first()
+
+    cart_dic = ast.literal_eval(user.cart)
+
+    cart_dic[product.prod_id] += 1
+
+    user.cart = str(cart_dic)
+
+    db.session.add(user)
+    db.session.commit()
+
+    return redirect(url_for('views.cart', id=user.id))
+
+
+@views.route('/cart/delete/<prod_id>/<id>')
+@login_required
+def cart_del(prod_id, id):
+    user = User.query.filter_by(id=int(id)).first()
+    product = Product.query.filter_by(prod_id=int(prod_id)).first()
+
+    cart_dic = ast.literal_eval(user.cart)
+
+    del cart_dic[product.prod_id]
+
+    user.cart = str(cart_dic)
+
+    db.session.add(user)
+    db.session.commit()
+
+    return redirect(url_for('views.cart', id=user.id))
+
+
 ########################################
 #            NOT IN USE                #
 ########################################
@@ -108,3 +223,18 @@ def delete_note(id):
     db.session.commit()
 
     return redirect(url_for('views.home'))
+
+
+# @views.route('/make/<type>/<id>')
+# # @login_required
+# def make_supplier(type, id):
+#     user = User.query.filter_by(id=int(id)).first()
+#     if type == 'user':
+#         user.user_type = 'user'
+#     elif type == 'supplier':
+#         user.user_type = 'supplier'
+#     elif type == 'admin':
+#         user.user_type = 'admin'
+#     db.session.add(user)
+#     db.session.commit()
+#     return redirect(url_for('views.admin'))

@@ -54,20 +54,26 @@
           {% if user.user_type == 'user' %}
           <a class="nav-item nav-link" id="home" href="/">Home</a>
           <a class="nav-item nav-link" id="user" href="/user">User</a>
-          <a class="nav-item nav-link" id="cart" href="/cart">Cart</a>
+          <a class="nav-item nav-link" id="cart" href="/cart/{{ user.id }}"
+            >Cart</a
+          >
           <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
           {% elif user.user_type == 'supplier'%}
           <a class="nav-item nav-link" id="home" href="/">Home</a>
           <a class="nav-item nav-link" id="supplier" href="/supplier"
             >Supplier</a
           >
-          <a class="nav-item nav-link" id="cart" href="/cart">Cart</a>
+          <a class="nav-item nav-link" id="cart" href="/cart/{{ user.id }}"
+            >Cart</a
+          >
           <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
           {% elif user.user_type == 'admin'%}
           <a class="nav-item nav-link" id="home" href="/">Home</a>
           <a class="nav-item nav-link" id="admin" href="/admin">Admin</a>
           <a class="nav-item nav-link" id="user" href="/user">User</a>
-          <a class="nav-item nav-link" id="cart" href="/cart">Cart</a>
+          <a class="nav-item nav-link" id="cart" href="/cart/{{ user.id }}"
+            >Cart</a
+          >
           <a class="nav-item nav-link" id="supplier" href="/supplier"
             >Supplier</a
           >
@@ -77,10 +83,12 @@
           <a class="nav-item nav-link" id="login" href="/login">Login</a>
           <a class="nav-item nav-link" id="signup" href="/sign-up">Sign Up</a>
 
-<!-- just for testing -->
+          <!-- just for testing -->
 
           <a class="nav-item nav-link" id="user" href="/user">User</a>
-          <a class="nav-item nav-link" id="cart" href="/cart">Cart</a>
+          <a class="nav-item nav-link" id="cart" href="/cart/{{ user.id }}"
+            >Cart</a
+          >
           <a class="nav-item nav-link" id="supplier" href="/supplier"
             >Supplier</a
           >
@@ -91,6 +99,7 @@
       </div>
     </nav>
 
+    <!-- FLASH alert display -->
     {% with messages = get_flashed_messages(with_categories=true) %} {% if
     messages %} {% for category, message in messages %} {% if category ==
     'error' %}
