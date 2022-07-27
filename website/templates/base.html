@@ -99,6 +99,42 @@
       </div>
     </nav>
 
+    {% if user.user_type == 'admin' %}
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbar"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbar">
+        <div class="navbar-nav">
+          <a
+            class="nav-item nav-link"
+            id="users-m"
+            href="/admin-users-management"
+            >Users Management</a
+          >
+          <a
+            class="nav-item nav-link"
+            id="products-m"
+            href="/admin-products-management"
+            >Stock Management</a
+          >
+          <a
+            class="nav-item nav-link"
+            id="sales-m"
+            href="/admin-sales-management"
+            >Sales Management</a
+          >
+        </div>
+      </div>
+    </nav>
+    {% endif %}
+
     <!-- FLASH alert display -->
     {% with messages = get_flashed_messages(with_categories=true) %} {% if
     messages %} {% for category, message in messages %} {% if category ==

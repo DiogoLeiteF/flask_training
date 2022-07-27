@@ -1,0 +1,240 @@
+{% extends "base.html" %} {% block title %}Admin{% endblock %} {% block content
+%}
+<br />
+
+<h1 align="center">Stock Management</h1>
+<hr />
+
+<br />
+<!-- product list -->
+<h2 align="center">Product List</h2>
+
+<div class="container-users">
+  <ul>
+    {% for prod in products %}
+    <div class="product_list">
+      <p>
+        <strong> ID:</strong> {{ prod.prod_id }} | <strong>Name:</strong> {{
+        prod.name }} | <strong>Description:</strong> {{ prod.description }} |
+        <strong>Supplier:</strong> {{ prod.supplier }} |
+        <strong>Supplier Price:</strong> {{ prod.supplier_price }} |
+        <strong>Retal Price:</strong> {{ prod.retail_price }} |
+        <strong>Warehouse Location:</strong> {{ prod.warehouse_location }} |
+        <strong>Stock (current):</strong> {{ prod.stock }} |
+        <strong>Desired Stock:</strong> {{ prod.stock_prev }} |
+        <strong>Sold:</strong> {{ prod.sold }}
+      </p>
+    </div>
+
+    <div class="user_list_btn">
+      <!-- delete product -->
+      <a href="/delete-product/{{ prod.prod_id }}" class="btn btn-danger"
+        >DELETE</a
+      >
+    </div>
+
+    {% endfor %}
+  </ul>
+</div>
+
+<!-- update product -->
+<br />
+<h2 align="center">Update Product</h2>
+<form action="/products-management/update-product" method="POST">
+  <div class="form-group">
+    <label for="id">Product ID</label>
+    <input
+      type="number"
+      class="form-control"
+      id="id"
+      name="prod_id"
+      placeholder="Enter product ID"
+      required
+    />
+  </div>
+  <div class="form-group">
+    <label for="name">Product Name</label>
+    <input
+      type="text"
+      class="form-control"
+      id="name"
+      name="name"
+      placeholder="Enter product name"
+    />
+  </div>
+  <div class="form-group">
+    <label for="desc">Product Description</label>
+    <input
+      type="text"
+      class="form-control"
+      id="desc"
+      name="description"
+      placeholder="Enter product description"
+    />
+  </div>
+  <div class="form-group">
+    <label for="supplier">Supplier</label>
+    <input
+      type="text"
+      class="form-control"
+      id="supplier"
+      name="supplier"
+      placeholder="Enter supplier name"
+    />
+  </div>
+  <div class="form-group">
+    <label for="supplier_price">Supplier Price</label>
+    <input
+      type="number"
+      class="form-control"
+      id="supplier_price"
+      name="supplier_price"
+      placeholder="Enter supplier price"
+    />
+  </div>
+  <div class="form-group">
+    <label for="price">Retail Price</label>
+    <input
+      type="number"
+      class="form-control"
+      id="price"
+      name="retail_price"
+      placeholder="Enter retail price"
+    />
+  </div>
+  <div class="form-group">
+    <label for="location">Warehouse Location</label>
+    <input
+      type="text"
+      class="form-control"
+      id="location"
+      name="warehouse_location"
+      placeholder="Enter warehouse location"
+    />
+  </div>
+  <div class="form-group">
+    <label for="stock">Product Stock</label>
+    <input
+      type="number"
+      class="form-control"
+      id="stock"
+      name="stock"
+      placeholder="Enter product current stock"
+    />
+  </div>
+  <div class="form-group">
+    <label for="stock-prev">Product Desired Stock</label>
+    <input
+      type="number"
+      class="form-control"
+      id="stock-prev"
+      name="stock_prev"
+      placeholder="Enter desired stock"
+    />
+  </div>
+
+  <br />
+  <button type="submit" class="btn btn-dark btn-block">Update Product</button>
+  <br />
+</form>
+<br />
+
+<!-- add new product -->
+<br />
+<h2 align="center">Add New Product</h2>
+<form action="/products-management/add-product" method="POST">
+  <div class="form-group">
+    <label for="name">Product Name</label>
+    <input
+      type="text"
+      class="form-control"
+      id="name"
+      name="name"
+      placeholder="Enter product name"
+      required
+    />
+  </div>
+  <div class="form-group">
+    <label for="desc">Product Description</label>
+    <input
+      type="text"
+      class="form-control"
+      id="desc"
+      name="description"
+      placeholder="Enter product description"
+      required
+    />
+  </div>
+  <div class="form-group">
+    <label for="supplier">Supplier</label>
+    <input
+      type="text"
+      class="form-control"
+      id="supplier"
+      name="supplier"
+      placeholder="Enter supplier name"
+      required
+    />
+  </div>
+  <div class="form-group">
+    <label for="supplier_price">Supplier Price</label>
+    <input
+      type="number"
+      class="form-control"
+      id="supplier_price"
+      name="supplier_price"
+      placeholder="Enter supplier price"
+      required
+    />
+  </div>
+  <div class="form-group">
+    <label for="price">Retail Price</label>
+    <input
+      type="number"
+      class="form-control"
+      id="price"
+      name="retail_price"
+      placeholder="Enter retail price"
+      required
+    />
+  </div>
+  <div class="form-group">
+    <label for="location">Warehouse Location</label>
+    <input
+      type="text"
+      class="form-control"
+      id="location"
+      name="warehouse_location"
+      placeholder="Enter warehouse location"
+      required
+    />
+  </div>
+  <div class="form-group">
+    <label for="stock">Product Stock</label>
+    <input
+      type="number"
+      class="form-control"
+      id="stock"
+      name="stock"
+      placeholder="Enter product current stock"
+      required
+    />
+  </div>
+  <div class="form-group">
+    <label for="stock-prev">Product Desired Stock</label>
+    <input
+      type="number"
+      class="form-control"
+      id="stock-prev"
+      name="stock_prev"
+      placeholder="Enter desired stock"
+      required
+    />
+  </div>
+
+  <br />
+  <button type="submit" class="btn btn-dark btn-block">Add Product</button>
+  <br />
+</form>
+<br />
+{% endblock %}

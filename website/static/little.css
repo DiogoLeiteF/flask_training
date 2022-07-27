@@ -58,7 +58,7 @@ h3{
 }
 
 /* --------------------------------------
-    ADMIN PAGE - USERS LIST
+    ADMINs PAGE 
 ---------------------------------------- */
 
 .container-users{
@@ -68,7 +68,7 @@ h3{
 
 .user_list {
     display: inline-block;
-    width: 68%;
+    width: 78%;
     height: auto;
 }
 
@@ -80,7 +80,37 @@ h3{
 
 .user_list_btn {
     display: inline-block;
-    width: 29%;
+    width: 19%;
+    margin:5px 0;
+}
+
+.user_list_btn a{
+    margin: 5px 0;
+}
+
+
+.search_list {
+    width: 100%;
+    height: auto;
+}
+
+.search_list p {
+    width: 100%;
+    padding: 10px;
+    border-bottom: 2px solid black;
+}
+
+
+.product_list{
+    display: inline-block;
+    width: 80%;
+    height: auto;
+}
+
+.product_list p {
+    width: 100%;
+    padding: 10px;
+    border-bottom: 2px solid black;
 }
 
 

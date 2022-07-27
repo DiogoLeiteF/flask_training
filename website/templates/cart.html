@@ -2,8 +2,6 @@
 %}
 <h1 align="center">Cart</h1>
 <ul class="list-group list-group-flush" id="notes">
-  <!-- NOT WORKING -->
-
   {% for key, value in cart.items() %} {% for product in products %} {% if key
   == product.prod_id %}
 
@@ -48,13 +46,29 @@
 <br />
 
 <form action="" method="POST">
-  <textarea name="delivery-note" id="note" class="form-control">
-Delivery notes:</textarea
+  <textarea
+    name="delivery-note"
+    class="form-control"
+    placeholder="Delivery Notes:"
+    style="height: 100px"
+  ></textarea>
+  <br />
+  <select
+    name="payment_method"
+    class="form-control"
+    style="width: 100%; height: 50px"
+    required
   >
+    <option selected disabled value="">Select your payment method</option>
+    <option value="visa">Visa</option>
+    <option value="mb">MB</option>
+    <option value="transfer">Tranfer</option>
+  </select>
+
   <br />
 
   <div align="center">
-    <button type="submit" class="btn btn-dark">Buy</button>
+    <button type="submit" class="btn btn-dark">Order</button>
   </div>
 </form>
 {% endblock %}

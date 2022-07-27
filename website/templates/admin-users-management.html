@@ -1,0 +1,73 @@
+{% extends "base.html" %} {% block title %}Admin{% endblock %} {% block content
+%}
+
+<h1 align="center">User List</h1>
+<div class="container-users">
+  <ul>
+    {% for usr in users %}
+    <div class="user_list">
+      <p>
+        id: {{ usr.id }} | email: {{ usr.email }} | name: {{ usr.first_name }}
+        {{ usr.last_name }} | TYPE:
+        <strong>{{ usr.user_type }}</strong>
+      </p>
+    </div>
+    <div class="user_list_btn">
+      <!-- change user type -->
+      <a href="/change-type/{{ usr.id }}" class="btn btn-dark">User Type</a>
+
+      <!-- delete user -->
+      <a href="/delete-user/{{ usr.id }}" class="btn btn-danger">DELETE</a>
+    </div>
+
+    {% endfor %}
+  </ul>
+</div>
+<br />
+
+<!-- Search -->
+<h2 align="center">Search User</h2>
+<form action="/admin/user-search" method="POST">
+  <div class="form-group">
+    <label for="name"></label>
+    <input
+      type="text"
+      class="form-control"
+      id="name"
+      name="search"
+      placeholder="Enter user info"
+      required
+    />
+  </div>
+  <br />
+  <button type="submit" class="btn btn-dark btn-block">Search</button>
+  <br />
+</form>
+<br />
+
+<div>
+  <ul>
+    {% for usr in users_search %}
+    <div class="search_list">
+      <h3>{{ usr.first_name }} {{ usr.last_name }}</h3>
+      <p>id: {{ usr.id }}</p>
+      <p>email: {{ usr.email }}</p>
+      <p>NIF: {{ usr.nif }}</p>
+      <p>Address: {{ usr.address }}</p>
+      <p>Phone: {{usr.phone}}</p>
+      <p>Menber Since: {{ usr.date_created }}</p>
+      <p>
+        TYPE:
+        <strong>{{ usr.user_type }}</strong>
+      </p>
+      <p>Cart: {{ usr.cart }}</p>
+      <p>Buys: {{ usr.buys }}</p>
+      <hr />
+
+      <br />
+    </div>
+
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}

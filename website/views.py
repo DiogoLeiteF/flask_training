@@ -11,7 +11,6 @@ views = Blueprint('views', __name__)
 
 
 @views.route('/', methods=['GET', 'POST'])
-# @login_required
 def home():
     products = Product.query.all()
 
@@ -53,71 +52,18 @@ def add_to_cart(user_id, prod_id):
 
 
 @views.route('/user')
+@login_required
 def user():
     return render_template('user.html', user=current_user)
 
 
 @views.route('/supplier')
+@login_required
 def supplier():
     return render_template('supplier.html', user=current_user)
 
 
-@views.route('/admin')
-def admin():
-    users = User.query.all()
-    products = Product.query.all()
-    return render_template('admin.html', user=current_user, users=users, products=products)
 
-
-@views.route('/delete-user/<id>')
-# @login_required
-def delete_user(id):
-    user = User.query.filter_by(id=int(id)).delete()
-    db.session.commit()
-
-    return redirect(url_for('views.admin'))
-
-
-@views.route('/change-type/<id>')
-# @login_required
-def change_type(id):
-    user = User.query.filter_by(id=int(id)).first()
-    if user.user_type == 'user':
-        user.user_type = 'supplier'
-        flash('User Type Changed to SUPPLIER', category='success')
-    elif user.user_type == 'supplier':
-        user.user_type = 'admin'
-        flash('User Type Changed to ADMIN', category='success')
-    elif user.user_type == 'admin':
-        user.user_type = 'user'
-        flash('User Type Changed to USER', category='success')
-    db.session.add(user)
-    db.session.commit()
-    return redirect(url_for('views.admin'))
-
-
-@views.route('/admin/add-product', methods=['GET', 'POST'])
-# @login_required
-def add_prod():
-    if request.method == "POST":
-        name = request.form.get('name')
-        description = request.form.get('description')
-        supplier = request.form.get('supplier')
-        supplier_price = request.form.get('supplier_price')
-        retail_price = request.form.get('retail_price')
-        warehouse_location = request.form.get('warehouse_location')
-        stock = request.form.get('stock')
-        stock_prev = request.form.get('stock_prev')
-
-        new_product = Product(name=name, description=description, supplier=supplier, supplier_price=supplier_price,
-                              retail_price=retail_price, warehouse_location=warehouse_location, stock=stock, stock_prev=stock_prev)
-        db.session.add(new_product)
-        db.session.commit()
-
-        flash('Product created!', category='success')
-        return redirect(url_for('views.admin'))
-
-    return render_template('sign_up.html', user=current_user)
 
 
 @views.route('/cart/<id>', methods=['GET', 'POST'])
@@ -135,23 +81,29 @@ def cart(id):
     if request.method == 'POST':
         if user.cart != '{}':
             note = request.form.get('delivery-note')
+            payment_method = request.form.get('payment_method')
             new_sale = Sale(delivery_notes=note,
-                            user_id=current_user.id, material=current_user. cart)
-            db.session.add(new_sale)
+                            user_id=current_user.id, material=current_user. cart,
+                            profit=0,
+                            total_value=0,
+                            payment_method=payment_method)
+
             for key, value in cart.items():
                 for product in products:
                     if product.prod_id == key:
                         product.stock -= value
                         product.sold += value
+                        new_sale.total_value += product.retail_price * value
+                        new_sale.profit += product.retail_price * value - product.supplier_price * value
 
+            db.session.add(new_sale)
             user.cart = '{}'
             db.session.commit()
             flash('Your order has been created', category='success')
-            return redirect(url_for('views.home'))
+            return redirect(url_for('views.payment', id=new_sale.sale_id))
         else:
             flash('Your cart is empty!', category='error')
             return redirect(url_for('views.home'))
-
 
     return render_template('/cart.html', user=current_user, products=products, cart=cart, total=total)
 
@@ -212,17 +164,26 @@ def cart_del(prod_id, id):
     return redirect(url_for('views.cart', id=user.id))
 
 
+@views.route('/payment/<id>')
+@login_required
+def payment(id):
+
+
+    return render_template('payment.html', id=id, user=current_user)
+
+
+
 ########################################
 #            NOT IN USE                #
 ########################################
 
 
-@views.route('/delete-note/<id>')
-def delete_note(id):
-    note = Note.query.filter_by(id=int(id)).delete()
-    db.session.commit()
+# @views.route('/delete-note/<id>')
+# def delete_note(id):
+#     note = Note.query.filter_by(id=int(id)).delete()
+#     db.session.commit()
 
-    return redirect(url_for('views.home'))
+#     return redirect(url_for('views.home'))
 
 
 # @views.route('/make/<type>/<id>')
