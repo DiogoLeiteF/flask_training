@@ -1,145 +1,67 @@
 {% extends "base.html" %} {% block title %}Admin{% endblock %} {% block content
 %}
-
-<h1 align="center">Admin</h1>
-<h2 align="center">user list</h2>
-<div class="container-users">
-  <ul>
-    {% for usr in users %}
-    <div class="user_list">
-      <p>
-        id: {{ usr.id }} | email: {{ usr.email }} | name: {{ usr.first_name }}
-        {{ usr.last_name }} | NIF: {{ usr.nif }} | Address: {{ usr.address }} |
-        ph: {{usr.phone}} | TYPE:
-        <strong>{{ usr.user_type }}</strong>
-      </p>
-    </div>
-    <div class="user_list_btn">
-      <!-- change user type -->
-      <a href="/change-type/{{ usr.id }}" class="btn btn-dark">User Type</a>
-
-      <!-- delete user -->
-      <a href="/delete-user/{{ usr.id }}" class="btn btn-danger">DELETE</a>
-    </div>
-
-    {% endfor %}
-  </ul>
-</div>
-
-<!-- product list -->
-<h2 align="center">Product List</h2>
-
-<div class="container-users">
-  <ul>
-    {% for prod in products %}
-    <div class="user_list">
-      <p>
-        prod_id: {{ prod.prod_id }} | Description: {{ prod.description }} |
-        Supplier: {{ prod.supplier }} | Supplier Price: {{ prod.supplier_price
-        }} | Retal Price: {{ prod.retail_price }} | Warehouse Location: {{
-        prod.warehouse_location }} | Stock (current): {{ prod.stock }} | Desired
-        Stock: {{ prod.stock_prev }} | Sold: {{ prod.sold }}
-      </p>
-    </div>
-
-    {% endfor %}
-  </ul>
-</div>
-
-<!-- add new product -->
-<h2 align="center">Add New Product</h2>
-<form action="/admin/add-product" method="POST">
-  <div class="form-group">
-    <label for="name">Product Name</label>
-    <input
-      type="text"
-      class="form-control"
-      id="name"
-      name="name"
-      placeholder="Enter product name"
-      required
-    />
-  </div>
-  <div class="form-group">
-    <label for="desc">Product Description</label>
-    <input
-      type="text"
-      class="form-control"
-      id="desc"
-      name="description"
-      placeholder="Enter product description"
-    />
-  </div>
-  <div class="form-group">
-    <label for="supplier">Supplier</label>
-    <input
-      type="text"
-      class="form-control"
-      id="supplier"
-      name="supplier"
-      placeholder="Enter supplier name"
-      required
-    />
-  </div>
-  <div class="form-group">
-    <label for="supplier_price">Supplier Price</label>
-    <input
-      type="number"
-      class="form-control"
-      id="supplier_price"
-      name="supplier_price"
-      placeholder="Enter supplier price"
-      required
-    />
-  </div>
-  <div class="form-group">
-    <label for="price">Retail Price</label>
-    <input
-      type="number"
-      class="form-control"
-      id="price"
-      name="retail_price"
-      placeholder="Enter retail price"
-      required
-    />
-  </div>
-  <div class="form-group">
-    <label for="location">Warehouse Location</label>
-    <input
-      type="text"
-      class="form-control"
-      id="location"
-      name="warehouse_location"
-      placeholder="Enter warehouse location"
-      required
-    />
-  </div>
-  <div class="form-group">
-    <label for="stock">Product Stock</label>
-    <input
-      type="number"
-      class="form-control"
-      id="stock"
-      name="stock"
-      placeholder="Enter product current stock"
-      required
-    />
-  </div>
-  <div class="form-group">
-    <label for="stock-prev">Product Desired Stock</label>
-    <input
-      type="number"
-      class="form-control"
-      id="stock-prev"
-      name="stock_prev"
-      placeholder="Enter desired stock"
-      required
-    />
-  </div>
-
-  <br />
-  <button type="submit" class="btn btn-dark btn-block">Submit</button>
-  <br />
-</form>
 <br />
+
+<h1 align="center">Sales Management</h1>
+<hr />
+<div align="center">
+  <a href="/admin-sales-management/all" class="btn btn-dark">All Sales</a>
+  <a href="/admin-sales-management/awaits-payment" class="btn btn-dark"
+    >Awaits Payment</a
+  >
+  <a href="/admin-sales-management/awaits-material" class="btn btn-dark"
+    >Awaits Material</a
+  >
+  <a href="/admin-sales-management/preparation" class="btn btn-dark"
+    >Preparation</a
+  >
+  <a href="/admin-sales-management/sent" class="btn btn-dark">Sent</a>
+  <a href="/admin-sales-management/done" class="btn btn-dark">Done</a>
+</div>
+<br />
+<div class="container-users">
+  <table id="stock-table">
+    <thead>
+      <tr>
+        <th>Sale ID</th>
+        <th>User ID</th>
+        <th>Cart</th>
+        <th>Created</th>
+        <th>Value</th>
+        <th>Profit</th>
+        <th>Notes</th>
+        <th>Payment</th>
+        <th>Status</th>
+        <th>Change Status</th>
+        <th>Delete Sale</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for sale in sales %}
+      <tr>
+        <td class="center">{{ sale.sale_id }}</td>
+        <td>{{sale.user_id }}</td>
+        <td>{{ sale.material }}</td>
+        <td>{{ sale.date_created }}</td>
+        <td class="center">{{ sale.total_value }}</td>
+        <td class="center">{{ sale.profit }}</td>
+        <td>{{ sale.delivery_notes }}</td>
+        <td class="center">{{ sale.payment_method }}</td>
+        <td class="center">{{ sale.status }}</td>
+        <td class="center">
+          <a href="/update-sale/{{ sale.sale_id }}" class="btn btn-dark">
+            Update
+          </a>
+        </td>
+        <td class="center">
+          <a href="/delete-sale/{{ sale.sale_id }}" class="btn btn-danger"
+            >DELETE</a
+          >
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
 {% endblock %}

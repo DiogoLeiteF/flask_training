@@ -87,6 +87,10 @@ def products_management():
     users = User.query.all()
     products = Product.query.all()
     sales = Sale.query.all()
+    for prod in products:
+        if prod.stock < prod.stock_prev*0.10:
+            flash(
+                f'ATENTION LOW STOCK: Product ID:{prod.prod_id} ||| NAME: {prod.name} ', category='error')
     return render_template('admin-products-management.html', user=current_user, users=users, products=products, sales=sales)
 
 
@@ -123,14 +127,6 @@ def add_prod():
     return render_template('sign_up.html', user=current_user)
 
 
-
-#######################################
-######################################
-# NOT WORKING
-########################################
-########################################
-
-
 @admin.route('/products-management/update-product', methods=['GET', 'POST'])
 @login_required
 def update_prod():
@@ -145,14 +141,11 @@ def update_prod():
         stock = request.form.get('stock')
         stock_prev = request.form.get('stock_prev')
 
-        print(type(id))
-        print(type(name))
-
         update_product = Product.query.filter_by(prod_id=id).first()
-        
+
         if name:
             update_product.name = name
-            
+
         if description:
             update_product.description = description
 
@@ -167,7 +160,7 @@ def update_prod():
 
         if warehouse_location:
             update_product.warehouse_location = warehouse_location
-            
+
         if stock:
             update_product.stock = stock
 
@@ -188,10 +181,67 @@ def update_prod():
 ###############################################
 
 
-@admin.route('/admin-sales-management')
+@admin.route('/admin-sales-management/<status>')
 @login_required
-def sales_management():
+def sales_management(status="all"):
     users = User.query.all()
     products = Product.query.all()
-    sales = Sale.query.all()
+    if status == 'all':
+        sales = Sale.query.all()
+        print(status)
+    elif status == 'awaits-payment':
+        sales = Sale.query.filter_by(status='Awaits Payment').all()
+    elif status == 'awaits-material':
+        sales = Sale.query.filter_by(status='Awaits Material').all()
+    elif status == 'preparation':
+        sales = Sale.query.filter_by(status='Preparation').all()
+    elif status == 'sent':
+        sales = Sale.query.filter_by(status='Sent').all()
+    elif status == 'done':
+        sales = Sale.query.filter_by(status='Done').all()
+    print(status)
     return render_template('admin-sales-management.html', user=current_user, users=users, products=products, sales=sales)
+
+
+@admin.route('/update-sale/<id>')
+@login_required
+def update_sale(id):
+    update = Sale.query.filter_by(sale_id=int(id)).first()
+    if update.status == 'Awaits Payment':
+        update.status = 'Awaits Material'
+    elif update.status == 'Awaits Material':
+        update.status = 'Preparation'
+    elif update.status == 'Preparation':
+        update.status = 'Sent'
+    elif update.status == 'Sent':
+        update.status = 'Done'
+    elif update.status == 'Done':
+        update.status = 'Awaits Payment'
+
+    db.session.add(update)
+    db.session.commit()
+
+    flash(
+        f'Order {update.sale_id} status changed to {update.status}', category='success')
+    return redirect(url_for('admin.sales_management', status='all'))
+
+
+@admin.route('delete-sale/<id>')
+@login_required
+def delete_sale(id):
+    sale = Sale.query.filter_by(sale_id=int(id)).first()
+    sale_dict = ast.literal_eval(sale.material)
+    # update the stock table
+    products = Product.query.all()
+    for product in products:
+        for key, value in sale_dict.items():
+            if product.prod_id == key:
+                product.stock += value
+                product.sold -= value
+                db.session.add(product)
+    # delete line in sale table
+    db.session.delete(sale)
+    db.session.commit()
+    flash(
+        f'Order {sale.sale_id} DELETED')
+    return redirect(url_for('admin.sales_management', status='all'))

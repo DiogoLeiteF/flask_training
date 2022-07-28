@@ -1,27 +1,44 @@
 {% extends "base.html" %} {% block title %}Admin{% endblock %} {% block content
 %}
-
-<h1 align="center">User List</h1>
+<br />
+<h1 align="center">Users List</h1>
+<hr />
+<br />
 <div class="container-users">
-  <ul>
-    {% for usr in users %}
-    <div class="user_list">
-      <p>
-        id: {{ usr.id }} | email: {{ usr.email }} | name: {{ usr.first_name }}
-        {{ usr.last_name }} | TYPE:
-        <strong>{{ usr.user_type }}</strong>
-      </p>
-    </div>
-    <div class="user_list_btn">
-      <!-- change user type -->
-      <a href="/change-type/{{ usr.id }}" class="btn btn-dark">User Type</a>
-
-      <!-- delete user -->
-      <a href="/delete-user/{{ usr.id }}" class="btn btn-danger">DELETE</a>
-    </div>
-
-    {% endfor %}
-  </ul>
+  <table id="stock-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Type</th>
+        <th>Change User Type</th>
+        <th>Delete User</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for usr in users %}
+      <tr>
+        <td class="center">{{ usr.id }}</td>
+        <td>{{ usr.first_name }} {{ usr.last_name }}</td>
+        <td>{{ usr.email }}</td>
+        <td><strong>{{ usr.user_type }}</strong></td>
+        <td class="center">
+          <!-- change user type -->
+          <a href="/change-type/{{ usr.id }}" class="btn btn-dark center"
+            >User Type</a
+          >
+        </td>
+        <td class="center">
+          <!-- delete user -->
+          <a href="/delete-user/{{ usr.id }}" class="btn btn-danger center"
+            >DELETE</a
+          >
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
 <br />
 

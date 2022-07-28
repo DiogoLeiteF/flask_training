@@ -106,11 +106,11 @@
         class="navbar-toggler"
         type="button"
         data-toggle="collapse"
-        data-target="#navbar"
+        data-target="#navbar2"
       >
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbar">
+      <div class="collapse navbar-collapse" id="navbar2">
         <div class="navbar-nav">
           <a
             class="nav-item nav-link"
@@ -127,7 +127,7 @@
           <a
             class="nav-item nav-link"
             id="sales-m"
-            href="/admin-sales-management"
+            href="/admin-sales-management/all"
             >Sales Management</a
           >
         </div>
@@ -154,10 +154,12 @@
     </div>
     {% endif %} {% endfor %} {% endif %} {% endwith %}
 
+    <!-- block content -->
     <div class="container main">{% block content %} {% endblock %}</div>
 
+    <!-- site footer -->
     <footer class="site-footer">
-      <div class="container">
+      <div>
         <span class="nav-item nav-link" id="store_id" align="center"
           >IT<a href="/" id="mega"><span>MEGA</span></a
           ><span style="font-size: 0.7rem">store</span></span

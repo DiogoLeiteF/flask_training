@@ -10,31 +10,44 @@
 <h2 align="center">Product List</h2>
 
 <div class="container-users">
-  <ul>
-    {% for prod in products %}
-    <div class="product_list">
-      <p>
-        <strong> ID:</strong> {{ prod.prod_id }} | <strong>Name:</strong> {{
-        prod.name }} | <strong>Description:</strong> {{ prod.description }} |
-        <strong>Supplier:</strong> {{ prod.supplier }} |
-        <strong>Supplier Price:</strong> {{ prod.supplier_price }} |
-        <strong>Retal Price:</strong> {{ prod.retail_price }} |
-        <strong>Warehouse Location:</strong> {{ prod.warehouse_location }} |
-        <strong>Stock (current):</strong> {{ prod.stock }} |
-        <strong>Desired Stock:</strong> {{ prod.stock_prev }} |
-        <strong>Sold:</strong> {{ prod.sold }}
-      </p>
-    </div>
-
-    <div class="user_list_btn">
-      <!-- delete product -->
-      <a href="/delete-product/{{ prod.prod_id }}" class="btn btn-danger"
-        >DELETE</a
-      >
-    </div>
-
-    {% endfor %}
-  </ul>
+  <table id="stock-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Supplier</th>
+        <th>Sup. Price</th>
+        <th>Retail Price</th>
+        <th>Warehouse Loc.</th>
+        <th>Current Stock</th>
+        <th>Desired Stock</th>
+        <th>Sold Items</th>
+        <th>Delete Item</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for prod in products %}
+      <tr {% if prod.stock < prod.stock_prev*0.10  %}class="low-stock"{% endif %}>
+        <td class="center">{{ prod.prod_id }}</td>
+        <td>{{prod.name }}</td>
+        <td>{{ prod.description }}</td>
+        <td>{{ prod.supplier }}</td>
+        <td class="center">{{ prod.supplier_price }}</td>
+        <td class="center">{{ prod.retail_price }}</td>
+        <td>{{ prod.warehouse_location }}</td>
+        <td class="center">{{ prod.stock }}</td>
+        <td class="center">{{ prod.stock_prev }}</td>
+        <td class="center">{{ prod.sold }}</td>
+        <td class="center">
+          <a href="/delete-product/{{ prod.prod_id }}" class="btn btn-danger"
+            >DELETE</a
+          >
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
 
 <!-- update product -->
