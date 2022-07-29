@@ -51,19 +51,63 @@ def add_to_cart(user_id, prod_id):
     return redirect(url_for('views.home', ))
 
 
-@views.route('/user')
+@views.route('/user/<stat>')
 @login_required
-def user():
-    return render_template('user.html', user=current_user)
+def user(stat='all'):
+    if stat == 'all':
+        sales = Sale.query.filter_by(user_id=current_user.id).all()
+    elif stat == 'awaits-payment':
+        sales = Sale.query.filter_by(
+            user_id=current_user.id, status='Awaits Payment').all()
+    elif stat == 'awaits-material':
+        sales = Sale.query.filter_by(
+            user_id=current_user.id, status='Awaits Material').all()
+    elif stat == 'preparation':
+        sales = Sale.query.filter_by(
+            user_id=current_user.id, status='Preparation').all()
+    elif stat == 'sent':
+        sales = Sale.query.filter_by(
+            user_id=current_user.id, status='Sent').all()
+    elif stat == 'done':
+        sales = Sale.query.filter_by(
+            user_id=current_user.id, status='Done').all()
+
+    return render_template('user.html', user=current_user, sales=sales)
+
+
+@views.route('/user/all/update-data', methods=['GET', 'POST'])
+@login_required
+def update_user():
+    if request.method == 'POST':
+        first_name = request.form.get('first_name')
+        last_name = request.form.get('last_name')
+        nif = request.form.get('nif')
+        address = request.form.get('address')
+        phone = request.form.get('phone')
+
+        update_user = User.query.filter_by(id=current_user.id).first()
+
+        if first_name:
+            update_user.first_name = first_name
+        if last_name:
+            update_user.last_name = last_name
+        if nif:
+            update_user.nif = nif
+        if address:
+            update_user.address = address
+        if phone:
+            update_user.phone = phone
+
+        db.session.add(update_user)
+        db.session.commit()
+        flash('User updated successfully', category='success')
+        return redirect(url_for('views.user', stat='all'))
 
 
 @views.route('/supplier')
 @login_required
 def supplier():
     return render_template('supplier.html', user=current_user)
-
-
-
 
 
 @views.route('/cart/<id>', methods=['GET', 'POST'])
@@ -94,7 +138,8 @@ def cart(id):
                         product.stock -= value
                         product.sold += value
                         new_sale.total_value += product.retail_price * value
-                        new_sale.profit += product.retail_price * value - product.supplier_price * value
+                        new_sale.profit += product.retail_price * \
+                            value - product.supplier_price * value
 
             db.session.add(new_sale)
             user.cart = '{}'
@@ -168,9 +213,7 @@ def cart_del(prod_id, id):
 @login_required
 def payment(id):
 
-
     return render_template('payment.html', id=id, user=current_user)
-
 
 
 ########################################

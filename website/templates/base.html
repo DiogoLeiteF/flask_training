@@ -53,7 +53,7 @@
 
           {% if user.user_type == 'user' %}
           <a class="nav-item nav-link" id="home" href="/">Home</a>
-          <a class="nav-item nav-link" id="user" href="/user">User</a>
+          <a class="nav-item nav-link" id="user" href="/user/all">User</a>
           <a class="nav-item nav-link" id="cart" href="/cart/{{ user.id }}"
             >Cart</a
           >
@@ -70,7 +70,7 @@
           {% elif user.user_type == 'admin'%}
           <a class="nav-item nav-link" id="home" href="/">Home</a>
           <a class="nav-item nav-link" id="admin" href="/admin">Admin</a>
-          <a class="nav-item nav-link" id="user" href="/user">User</a>
+          <a class="nav-item nav-link" id="user" href="/user/all">User</a>
           <a class="nav-item nav-link" id="cart" href="/cart/{{ user.id }}"
             >Cart</a
           >
@@ -85,7 +85,7 @@
 
           <!-- just for testing -->
 
-          <a class="nav-item nav-link" id="user" href="/user">User</a>
+          <a class="nav-item nav-link" id="user" href="/user/{{ user.id }}/all">User</a>
           <a class="nav-item nav-link" id="cart" href="/cart/{{ user.id }}"
             >Cart</a
           >
