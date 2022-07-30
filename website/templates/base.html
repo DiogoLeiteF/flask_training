@@ -64,7 +64,7 @@
             >Supplier</a
           >
           <a class="nav-item nav-link" id="cart" href="/cart/{{ user.id }}"
-            >Cart</a
+            >Cart ({{ user.cart|count }})</a
           >
           <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
           {% elif user.user_type == 'admin'%}
@@ -72,7 +72,7 @@
           <a class="nav-item nav-link" id="admin" href="/admin">Admin</a>
           <a class="nav-item nav-link" id="user" href="/user/all">User</a>
           <a class="nav-item nav-link" id="cart" href="/cart/{{ user.id }}"
-            >Cart</a
+            >Cart ({{ user.cart|count}})</a
           >
           <a class="nav-item nav-link" id="supplier" href="/supplier"
             >Supplier</a
@@ -85,9 +85,11 @@
 
           <!-- just for testing -->
 
-          <a class="nav-item nav-link" id="user" href="/user/{{ user.id }}/all">User</a>
+          <a class="nav-item nav-link" id="user" href="/user/{{ user.id }}/all"
+            >User</a
+          >
           <a class="nav-item nav-link" id="cart" href="/cart/{{ user.id }}"
-            >Cart</a
+            >Cart ({{ user.cart|count }})</a
           >
           <a class="nav-item nav-link" id="supplier" href="/supplier"
             >Supplier</a

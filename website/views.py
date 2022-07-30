@@ -1,5 +1,6 @@
 from flask import Blueprint, flash, redirect, render_template, request, flash, jsonify, url_for
 from flask_login import login_required, current_user
+from website.dummy_data import add_dummy_data
 from .models import User, Product, Sale
 from . import db
 import json
@@ -13,6 +14,11 @@ views = Blueprint('views', __name__)
 @views.route('/', methods=['GET', 'POST'])
 def home():
     products = Product.query.all()
+
+    ###################################
+    ####     ADD DATA to DB      ######
+    ##################################
+    # add_dummy_data(db=db, User=User, Sale=Sale, Product=Product)
 
     # NOT IN USE
     # if request.method == 'POST':
@@ -34,9 +40,6 @@ def add_to_cart(user_id, prod_id):
     prod = Product.query.filter_by(prod_id=int(prod_id)).first()
     user = User.query.filter_by(id=int(user_id)).first()
 
-    # just for testing
-    # user.cart = '{}'
-
     cart_dic = ast.literal_eval(user.cart)
     if prod.prod_id not in cart_dic:
         cart_dic[prod.prod_id] = 1
@@ -47,7 +50,8 @@ def add_to_cart(user_id, prod_id):
 
     db.session.add(user)
     db.session.commit()
-    # print(user.cart)
+    print(user.cart)
+    print(len(user.cart))
     return redirect(url_for('views.home', ))
 
 
@@ -124,6 +128,7 @@ def cart(id):
 
     if request.method == 'POST':
         if user.cart != '{}':
+            
             note = request.form.get('delivery-note')
             payment_method = request.form.get('payment_method')
             new_sale = Sale(delivery_notes=note,
@@ -131,15 +136,16 @@ def cart(id):
                             profit=0,
                             total_value=0,
                             payment_method=payment_method)
+            for prod, quant in cart.items():
+                for x in range(quant):
+                    new_sale.products.append(
+                        Product.query.filter_by(prod_id=prod).first())
 
-            for key, value in cart.items():
-                for product in products:
-                    if product.prod_id == key:
-                        product.stock -= value
-                        product.sold += value
-                        new_sale.total_value += product.retail_price * value
-                        new_sale.profit += product.retail_price * \
-                            value - product.supplier_price * value
+            for product in new_sale.products:
+                product.stock -= 1
+                product.sold += 1
+                new_sale.total_value += product.retail_price
+                new_sale.profit += product.retail_price - product.supplier_price
 
             db.session.add(new_sale)
             user.cart = '{}'

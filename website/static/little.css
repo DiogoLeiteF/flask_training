@@ -151,7 +151,7 @@ h3{
 }
 
 .low-stock{
-    background-color: rgb(211, 104, 104);
+    background-color: rgb(211, 104, 104) !important ;
 }
 
 

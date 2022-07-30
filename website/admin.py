@@ -84,14 +84,14 @@ def change_type(id):
 @admin.route('/admin-products-management')
 @login_required
 def products_management():
-    users = User.query.all()
+    
     products = Product.query.all()
-    sales = Sale.query.all()
+    
     for prod in products:
         if prod.stock < prod.stock_prev*0.10:
             flash(
                 f'ATENTION LOW STOCK: Product ID:{prod.prod_id} ||| NAME: {prod.name} ', category='error')
-    return render_template('admin-products-management.html', user=current_user, users=users, products=products, sales=sales)
+    return render_template('admin-products-management.html', user=current_user, products=products)
 
 
 @admin.route('/delete-product/<id>')

@@ -28,7 +28,17 @@
     </thead>
     <tbody>
       {% for prod in products %}
-      <tr {% if prod.stock < prod.stock_prev*0.10  %}class="low-stock"{% endif %}>
+      <tr
+        {%
+        if
+        prod.stock
+        <
+        prod.stock_prev*0.10%}
+        class="low-stock"
+        {%
+        endif
+        %}
+      >
         <td class="center">{{ prod.prod_id }}</td>
         <td>{{prod.name }}</td>
         <td>{{ prod.description }}</td>
