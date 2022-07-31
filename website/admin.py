@@ -1,4 +1,4 @@
-from flask import Blueprint, flash, redirect, render_template, request, flash, jsonify, url_for
+from flask import Blueprint, flash, redirect, render_template, request, flash, jsonify, session, url_for
 from flask_login import login_required, current_user
 from .models import User, Product, Sale
 from . import db
@@ -16,7 +16,7 @@ def admin_():
     users = User.query.all()
     products = Product.query.all()
     sales = Sale.query.all()
-    return render_template('admin.html', user=current_user, users=users, products=products, sales=sales)
+    return render_template('admin.html', user=current_user, users=users, products=products, sales=sales, cart_session=session["cart"])
 
 
 ################################################
@@ -28,7 +28,8 @@ def admin_():
 @login_required
 def users_management():
     users = User.query.all()
-    return render_template('admin-users-management.html', user=current_user, users=users)
+
+    return render_template('admin-users-management.html', user=current_user, users=users, cart_session=session["cart"])
 
 
 @admin.route('/admin/user-search', methods=['GET', 'POST'])
@@ -46,7 +47,7 @@ def user_search():
         if users_list == []:
             flash('User NOT found, try again', category='error')
 
-    return render_template('admin-users-management.html', users=users, user=current_user, users_search=users_list)
+    return render_template('admin-users-management.html', users=users, user=current_user, users_search=users_list, cart_session=session["cart"])
 
 
 @admin.route('/delete-user/<id>')
@@ -84,14 +85,14 @@ def change_type(id):
 @admin.route('/admin-products-management')
 @login_required
 def products_management():
-    
+
     products = Product.query.all()
-    
+
     for prod in products:
         if prod.stock < prod.stock_prev*0.10:
             flash(
                 f'ATENTION LOW STOCK: Product ID:{prod.prod_id} ||| NAME: {prod.name} ', category='error')
-    return render_template('admin-products-management.html', user=current_user, products=products)
+    return render_template('admin-products-management.html', user=current_user, products=products, cart_session=session["cart"])
 
 
 @admin.route('/delete-product/<id>')
@@ -188,7 +189,6 @@ def sales_management(status="all"):
     products = Product.query.all()
     if status == 'all':
         sales = Sale.query.all()
-        print(status)
     elif status == 'awaits-payment':
         sales = Sale.query.filter_by(status='Awaits Payment').all()
     elif status == 'awaits-material':
@@ -199,8 +199,10 @@ def sales_management(status="all"):
         sales = Sale.query.filter_by(status='Sent').all()
     elif status == 'done':
         sales = Sale.query.filter_by(status='Done').all()
-    print(status)
-    return render_template('admin-sales-management.html', user=current_user, users=users, products=products, sales=sales)
+    
+    
+
+    return render_template('admin-sales-management.html', user=current_user, users=users, products=products, sales=sales, cart_session=session["cart"])
 
 
 @admin.route('/update-sale/<id>')

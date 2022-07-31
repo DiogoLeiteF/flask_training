@@ -56,4 +56,4 @@ class Product(db.Model):
     sold = db.Column(db.Integer, default=0)
 
     def __repr__(self):
-        return f'Product: {self.name}'
+        return f'{self.name}'

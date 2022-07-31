@@ -1,4 +1,4 @@
-from flask import Blueprint, flash, redirect, render_template, request, flash, jsonify, url_for
+from flask import Blueprint, flash, redirect, render_template, request, flash, jsonify, session, url_for
 from flask_login import login_required, current_user
 from website.dummy_data import add_dummy_data
 from .models import User, Product, Sale
@@ -15,23 +15,22 @@ views = Blueprint('views', __name__)
 def home():
     products = Product.query.all()
 
+    if current_user.is_authenticated:
+        cart = ast.literal_eval(current_user.cart)
+        cart_len = 0
+        for value in cart.values():
+            cart_len += value
+        session["cart"] = cart_len
+    else:
+        session["cart"] = 0
+
     ###################################
     ####     ADD DATA to DB      ######
     ##################################
+    
     # add_dummy_data(db=db, User=User, Sale=Sale, Product=Product)
 
-    # NOT IN USE
-    # if request.method == 'POST':
-    #     note = request.form.get('note')
-
-    #     if len(note) < 1:
-    #         flash('Note is to short', category='error')
-    #     else:
-    #         new_note = Note(data=note, user_id=current_user.id)
-    #         db.session.add(new_note)
-    #         db.session.commit()
-    #         flash('Note added!', category='success')
-    return render_template('home.html', user=current_user, products=products)
+    return render_template('home.html', user=current_user, products=products, cart_session=session["cart"])
 
 
 @views.route('/add-to-cart/<user_id>/<prod_id>')
@@ -76,7 +75,7 @@ def user(stat='all'):
         sales = Sale.query.filter_by(
             user_id=current_user.id, status='Done').all()
 
-    return render_template('user.html', user=current_user, sales=sales)
+    return render_template('user.html', user=current_user, sales=sales, cart_session=session["cart"])
 
 
 @views.route('/user/all/update-data', methods=['GET', 'POST'])
@@ -111,7 +110,7 @@ def update_user():
 @views.route('/supplier')
 @login_required
 def supplier():
-    return render_template('supplier.html', user=current_user)
+    return render_template('supplier.html', user=current_user, cart_session=session["cart"])
 
 
 @views.route('/cart/<id>', methods=['GET', 'POST'])
@@ -128,7 +127,7 @@ def cart(id):
 
     if request.method == 'POST':
         if user.cart != '{}':
-            
+
             note = request.form.get('delivery-note')
             payment_method = request.form.get('payment_method')
             new_sale = Sale(delivery_notes=note,
@@ -140,6 +139,8 @@ def cart(id):
                 for x in range(quant):
                     new_sale.products.append(
                         Product.query.filter_by(prod_id=prod).first())
+
+            print(new_sale.products)
 
             for product in new_sale.products:
                 product.stock -= 1
@@ -156,7 +157,7 @@ def cart(id):
             flash('Your cart is empty!', category='error')
             return redirect(url_for('views.home'))
 
-    return render_template('/cart.html', user=current_user, products=products, cart=cart, total=total)
+    return render_template('/cart.html', user=current_user, products=products, cart=cart, total=total, cart_session=session["cart"])
 
 
 @views.route('/cart/remove/<prod_id>/<id>')
@@ -219,7 +220,7 @@ def cart_del(prod_id, id):
 @login_required
 def payment(id):
 
-    return render_template('payment.html', id=id, user=current_user)
+    return render_template('payment.html', id=id, user=current_user, cart_session=session["cart"])
 
 
 ########################################
@@ -248,3 +249,15 @@ def payment(id):
 #     db.session.add(user)
 #     db.session.commit()
 #     return redirect(url_for('views.admin'))
+
+    # NOT IN USE
+    # if request.method == 'POST':
+    #     note = request.form.get('note')
+
+    #     if len(note) < 1:
+    #         flash('Note is to short', category='error')
+    #     else:
+    #         new_note = Note(data=note, user_id=current_user.id)
+    #         db.session.add(new_note)
+    #         db.session.commit()
+    #         flash('Note added!', category='success')
