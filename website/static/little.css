@@ -67,10 +67,12 @@ h3{
 ---------------------------------------- */
 
 .container-users{
-    max-height: 50vh;
+    max-height: 75vh;
     overflow-y: scroll;
     overflow-x: scroll;
 }
+
+
 /* .user_list {
     display: inline-block;
     width: 78%;
@@ -168,6 +170,25 @@ h3{
 .sign-up-btn{
     margin: 0rem 3rem ;
 }
+
+/*---------------------------------------
+  GRAPHS           
+-----------------------------------------*/
+
+.graph-container{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.graph {
+    max-width: 30%;
+    min-width: 500px;
+}
+
+
+
+
 
 /*---------------------------------------
   SITE FOOTER               

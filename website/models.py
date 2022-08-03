@@ -3,8 +3,15 @@ from flask_login import UserMixin
 from sqlalchemy.sql import func
 
 
-sale_product = db.Table('sale_product', db.Column('sale_id', db.Integer, db.ForeignKey(
-    'sale.sale_id')), db.Column('product_id', db.Integer, db.ForeignKey('product.prod_id')))
+# sale_product = db.Table('sale_product', db.Column('sale_id', db.Integer, db.ForeignKey(
+#     'sale.sale_id')), db.Column('product_id', db.Integer, db.ForeignKey('product.prod_id')))
+
+class Sale_prod_list(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    sale_id = db.Column(db.ForeignKey('sale.sale_id'))
+    user_id = db.Column(db.ForeignKey('user.id'))
+    product_id = db.Column(db.ForeignKey('product.prod_id'))
+
 
 
 class Sale(db.Model):
@@ -17,7 +24,8 @@ class Sale(db.Model):
     delivery_notes = db.Column(db.String(200))
     payment_method = db.Column(db.String(20))
     status = db.Column(db.String(30), default='Awaits Payment')
-    products = db.relationship('Product', secondary=sale_product, backref='sales')
+    # products = db.relationship('Product', secondary=sale_product, backref='sales')
+    prod_list = db.relationship('Sale_prod_list', backref='sale')
 
     def __repr__(self):
         return f'sale number: {self.sale_id}'
@@ -54,6 +62,7 @@ class Product(db.Model):
     stock = db.Column(db.Integer, default=0)
     stock_prev = db.Column(db.Integer, default=100)
     sold = db.Column(db.Integer, default=0)
+    sales_list = db.relationship('Sale_prod_list', backref='product')
 
     def __repr__(self):
         return f'{self.name}'

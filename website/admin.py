@@ -1,10 +1,12 @@
 from flask import Blueprint, flash, redirect, render_template, request, flash, jsonify, session, url_for
 from flask_login import login_required, current_user
-from .models import User, Product, Sale
+from .models import Sale_prod_list, User, Product, Sale
 from . import db
 import json
 from sqlalchemy import update, text
 import ast
+import matplotlib.pyplot as plt
+import os
 
 
 admin = Blueprint('admin', __name__)
@@ -16,6 +18,52 @@ def admin_():
     users = User.query.all()
     products = Product.query.all()
     sales = Sale.query.all()
+<<<<<<< HEAD
+=======
+
+# Users over time
+    time = [x.date_created.date() for x in users]
+    plt.title('User Register')
+    plt.xticks(rotation=45)
+    plt.hist(time,color='grey')
+    plt.tight_layout()
+    plt.savefig('./website/static/graphs/admin1.png', dpi=300, format='png')
+    plt.close()
+
+# products sold
+    quant= [x.sold for x in products]
+    name = [x.name for x in products]
+    plt.title('Sales by Product')
+    plt.xticks(rotation=45)
+    plt.bar(name, quant, color='grey')
+    plt.tight_layout()
+    plt.savefig('./website/static/graphs/admin2.png', dpi=300, format='png')
+    plt.close()
+
+# sales over time 
+    quant= [x.date_created.date() for x in sales]
+    
+    plt.title('Sales Over Time')
+    plt.xticks(rotation=45)
+    plt.hist(quant, color='grey')
+    plt.tight_layout()
+    plt.savefig('./website/static/graphs/admin3.png', dpi=300, format='png')
+    plt.close()
+
+# imcome over time
+    date = [x.date_created.date() for x in sales]
+    value = [x.profit for x in sales]
+    plt.title('Profit')
+    plt.xticks(rotation=45)
+    plt.bar(date, value, color='grey')
+    plt.tight_layout()
+    plt.savefig('./website/static/graphs/admin4.png', dpi=300, format='png')
+    plt.close()
+
+
+
+
+>>>>>>> db-change
     return render_template('admin.html', user=current_user, users=users, products=products, sales=sales, cart_session=session["cart"])
 
 
@@ -199,8 +247,11 @@ def sales_management(status="all"):
         sales = Sale.query.filter_by(status='Sent').all()
     elif status == 'done':
         sales = Sale.query.filter_by(status='Done').all()
+<<<<<<< HEAD
     
     
+=======
+>>>>>>> db-change
 
     return render_template('admin-sales-management.html', user=current_user, users=users, products=products, sales=sales, cart_session=session["cart"])
 
@@ -209,10 +260,28 @@ def sales_management(status="all"):
 @login_required
 def update_sale(id):
     update = Sale.query.filter_by(sale_id=int(id)).first()
+    sale_data = Sale_prod_list.query.filter_by(sale_id=int(id)).all()
+    products = Product.query.all()
+
+    print(update.prod_list)
+
     if update.status == 'Awaits Payment':
-        update.status = 'Awaits Material'
+        for prod in sale_data:
+            for product in products:
+                if product.prod_id == prod.product_id:
+                    if product.stock < 1:
+                        update.status = 'Awaits Material'
+                    else:
+                        update.status = 'Preparation'
+
     elif update.status == 'Awaits Material':
-        update.status = 'Preparation'
+        for prod in sale_data:
+            for product in products:
+                if product.prod_id == prod.product_id:
+                    if product.stock < 1:
+                        update.status = 'Awaits Material'
+                    else:
+                        update.status = 'Preparation'
     elif update.status == 'Preparation':
         update.status = 'Sent'
     elif update.status == 'Sent':
@@ -233,7 +302,13 @@ def update_sale(id):
 def delete_sale(id):
     sale = Sale.query.filter_by(sale_id=int(id)).first()
     sale_dict = ast.literal_eval(sale.material)
-    # update the stock table
+
+    # update sale_prod_list
+    sale_prod = Sale_prod_list.query.filter_by(sale_id=int(id)).all()
+    for prod in sale_prod:
+        db.session.delete(prod)
+
+    # update the product table (reverse)
     products = Product.query.all()
     for product in products:
         for key, value in sale_dict.items():
