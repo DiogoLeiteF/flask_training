@@ -2,144 +2,16 @@
 %}
 
 <h1 align="center">Admin</h1>
-<h2 align="center">user list</h2>
-<div class="container-users">
-  <ul>
-    {% for usr in users %}
-    <div class="user_list">
-      <p>
-        id: {{ usr.id }} | email: {{ usr.email }} | name: {{ usr.first_name }}
-        {{ usr.last_name }} | NIF: {{ usr.nif }} | Address: {{ usr.address }} |
-        ph: {{usr.phone}} | TYPE:
-        <strong>{{ usr.user_type }}</strong>
-      </p>
-    </div>
-    <div class="user_list_btn">
-      <!-- change user type -->
-      <a href="/change-type/{{ usr.id }}" class="btn btn-dark">User Type</a>
-
-      <!-- delete user -->
-      <a href="/delete-user/{{ usr.id }}" class="btn btn-danger">DELETE</a>
-    </div>
-
-    {% endfor %}
-  </ul>
-</div>
-
-<!-- product list -->
-<h2 align="center">Product List</h2>
-
-<div class="container-users">
-  <ul>
-    {% for prod in products %}
-    <div class="user_list">
-      <p>
-        prod_id: {{ prod.prod_id }} | Description: {{ prod.description }} |
-        Supplier: {{ prod.supplier }} | Supplier Price: {{ prod.supplier_price
-        }} | Retal Price: {{ prod.retail_price }} | Warehouse Location: {{
-        prod.warehouse_location }} | Stock (current): {{ prod.stock }} | Desired
-        Stock: {{ prod.stock_prev }} | Sold: {{ prod.sold }}
-      </p>
-    </div>
-
-    {% endfor %}
-  </ul>
-</div>
-
-<!-- add new product -->
-<h2 align="center">Add New Product</h2>
-<form action="/admin/add-product" method="POST">
-  <div class="form-group">
-    <label for="name">Product Name</label>
-    <input
-      type="text"
-      class="form-control"
-      id="name"
-      name="name"
-      placeholder="Enter product name"
-      required
-    />
-  </div>
-  <div class="form-group">
-    <label for="desc">Product Description</label>
-    <input
-      type="text"
-      class="form-control"
-      id="desc"
-      name="description"
-      placeholder="Enter product description"
-    />
-  </div>
-  <div class="form-group">
-    <label for="supplier">Supplier</label>
-    <input
-      type="text"
-      class="form-control"
-      id="supplier"
-      name="supplier"
-      placeholder="Enter supplier name"
-      required
-    />
-  </div>
-  <div class="form-group">
-    <label for="supplier_price">Supplier Price</label>
-    <input
-      type="number"
-      class="form-control"
-      id="supplier_price"
-      name="supplier_price"
-      placeholder="Enter supplier price"
-      required
-    />
-  </div>
-  <div class="form-group">
-    <label for="price">Retail Price</label>
-    <input
-      type="number"
-      class="form-control"
-      id="price"
-      name="retail_price"
-      placeholder="Enter retail price"
-      required
-    />
-  </div>
-  <div class="form-group">
-    <label for="location">Warehouse Location</label>
-    <input
-      type="text"
-      class="form-control"
-      id="location"
-      name="warehouse_location"
-      placeholder="Enter warehouse location"
-      required
-    />
-  </div>
-  <div class="form-group">
-    <label for="stock">Product Stock</label>
-    <input
-      type="number"
-      class="form-control"
-      id="stock"
-      name="stock"
-      placeholder="Enter product current stock"
-      required
-    />
-  </div>
-  <div class="form-group">
-    <label for="stock-prev">Product Desired Stock</label>
-    <input
-      type="number"
-      class="form-control"
-      id="stock-prev"
-      name="stock_prev"
-      placeholder="Enter desired stock"
-      required
-    />
-  </div>
-
-  <br />
-  <button type="submit" class="btn btn-dark btn-block">Submit</button>
-  <br />
-</form>
+<!-- STATS -->
 <br />
+
+<h2 align="center">Stats</h2>
+<hr />
+<div class="graph-container">
+  <img src="../static/graphs/admin1.png" alt="" class="graph" />
+  <img src="../static/graphs/admin2.png" alt="" class="graph" />
+  <img src="../static/graphs/admin3.png" alt="" class="graph" />
+  <img src="../static/graphs/admin4.png" alt="" class="graph" />
+</div>
+<hr>
 {% endblock %}

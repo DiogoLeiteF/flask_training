@@ -1,4 +1,4 @@
-{% extends "base.html" %} {% block title %}Admin{% endblock %} {% block content
+{% extends "base.html" %} {% block title %}Sales Management{% endblock %} {% block content
 %}
 <br />
 
@@ -41,7 +41,14 @@
       <tr>
         <td class="center">{{ sale.sale_id }}</td>
         <td>{{sale.user_id }}</td>
-        <td>{{ sale.material }}</td>
+        <td>
+          {% for sale in sale.prod_list %} {% for product in products %} {% if
+          sale.product_id == product.prod_id %}
+          <li>{{ product.name }}</li>
+          {% endif %} {% endfor %}{% endfor %}
+        </td>
+
+        <!-- <td>{{ sale.material }}</td> -->
         <td>{{ sale.date_created }}</td>
         <td class="center">{{ sale.total_value }}</td>
         <td class="center">{{ sale.profit }}</td>
