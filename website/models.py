@@ -3,8 +3,6 @@ from flask_login import UserMixin
 from sqlalchemy.sql import func
 
 
-# sale_product = db.Table('sale_product', db.Column('sale_id', db.Integer, db.ForeignKey(
-#     'sale.sale_id')), db.Column('product_id', db.Integer, db.ForeignKey('product.prod_id')))
 
 class Sale_prod_list(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -24,7 +22,6 @@ class Sale(db.Model):
     delivery_notes = db.Column(db.String(200))
     payment_method = db.Column(db.String(20))
     status = db.Column(db.String(30), default='Awaits Payment')
-    # products = db.relationship('Product', secondary=sale_product, backref='sales')
     prod_list = db.relationship('Sale_prod_list', backref='sale')
 
     def __repr__(self):

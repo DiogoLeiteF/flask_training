@@ -1,12 +1,9 @@
-from flask import Blueprint, flash, redirect, render_template, request, flash, jsonify, session, url_for
+from flask import Blueprint, flash, redirect, render_template, request, flash, session, url_for
 from flask_login import login_required, current_user
 from .models import Sale_prod_list, User, Product, Sale
 from . import db
-import json
-from sqlalchemy import update, text
 import ast
 import matplotlib.pyplot as plt
-import os
 
 
 admin = Blueprint('admin', __name__)
@@ -18,47 +15,6 @@ def admin_():
     users = User.query.all()
     products = Product.query.all()
     sales = Sale.query.all()
-
-# Users over time
-    time = [x.date_created.date() for x in users]
-    plt.title('User Register')
-    plt.xticks(rotation=45)
-    plt.hist(time,color='grey')
-    plt.tight_layout()
-    plt.savefig('./website/static/graphs/admin1.png', dpi=300, format='png')
-    plt.close()
-
-# products sold
-    quant= [x.sold for x in products]
-    name = [x.name for x in products]
-    plt.title('Sales by Product')
-    plt.xticks(rotation=45)
-    plt.bar(name, quant, color='grey')
-    plt.tight_layout()
-    plt.savefig('./website/static/graphs/admin2.png', dpi=300, format='png')
-    plt.close()
-
-# sales over time 
-    quant= [x.date_created.date() for x in sales]
-    
-    plt.title('Sales Over Time')
-    plt.xticks(rotation=45)
-    plt.hist(quant, color='grey')
-    plt.tight_layout()
-    plt.savefig('./website/static/graphs/admin3.png', dpi=300, format='png')
-    plt.close()
-
-# imcome over time
-    date = [x.date_created.date() for x in sales]
-    value = [x.profit for x in sales]
-    plt.title('Profit')
-    plt.xticks(rotation=45)
-    plt.bar(date, value, color='grey')
-    plt.tight_layout()
-    plt.savefig('./website/static/graphs/admin4.png', dpi=300, format='png')
-    plt.close()
-
-
 
 
     return render_template('admin.html', user=current_user, users=users, products=products, sales=sales, cart_session=session["cart"])

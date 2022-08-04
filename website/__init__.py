@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from os import path
 from flask_login import LoginManager
 
-from website.dummy_data import add_dummy_data
+
 
 
 
@@ -21,11 +21,13 @@ def create_app():
     from .views import views
     from .auth import auth
     from .admin import admin
+    from .graph import graph
     
 
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
     app.register_blueprint(admin, url_prefix='/')
+    app.register_blueprint(graph, url_prefix='/')
 
     from .models import User
 
@@ -45,13 +47,14 @@ def create_app():
 
 
 def create_database(app):
-    # if not path.exists('website/' + DB_NAME):
-    #     db.create_all(app=app)
-    #     print('Created Database!')
+    if not path.exists('website/' + DB_NAME):
+        db.create_all(app=app)
+        print('Created Database!')
 
+# for testing
     # db.drop_all(app=app)
-    db.create_all(app=app)
-    print('Created Database!')
+    # db.create_all(app=app)
+    # print('Created Database!')
     
 
 

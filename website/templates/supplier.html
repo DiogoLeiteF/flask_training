@@ -33,10 +33,7 @@ content %}
         <th>Description</th>
         <th>Supplier</th>
         <th>Sup. Price</th>
-        <!-- <th>Retail Price</th> -->
-        <!-- <th>Warehouse Loc.</th> -->
         <th>Current Stock</th>
-        <!-- <th>Desired Stock</th> -->
         <th>Sold Items</th>
         <th>Total Income</th>
       </tr>
@@ -59,10 +56,7 @@ content %}
         <td>{{ prod.description }}</td>
         <td>{{ prod.supplier }}</td>
         <td class="center">{{ prod.supplier_price }}</td>
-        <!-- <td class="center">{{ prod.retail_price }}</td> -->
-        <!-- <td>{{ prod.warehouse_location }}</td> -->
         <td class="center">{{ prod.stock }}</td>
-        <!-- <td class="center">{{ prod.stock_prev }}</td> -->
         <td class="center">{{ prod.sold }}</td>
         <td class="center">{{ prod.supplier_price * prod.sold }}</td>
       </tr>
@@ -77,12 +71,8 @@ content %}
 <h2 align="center">Stats</h2>
 <hr />
 <div class="graph-container">
-  <img src="../static/graphs/supp1.png" alt="" class="graph" />
-  <img src="../static/graphs/supp2.png" alt="" class="graph" />
-  <img src="../static/graphs/supp3.png" alt="" class="graph" />
+  <img src="/supplier.png" alt="" class="graph" />
 </div>
-<hr>
-
-
+<hr />
 
 {% endblock %}

@@ -3,11 +3,9 @@ from flask_login import login_required, current_user
 from website.dummy_data import add_dummy_data
 from .models import Sale_prod_list, User, Product, Sale
 from . import db
-import json
 from sqlalchemy import update, text
 import ast
 import matplotlib.pyplot as plt
-import os
 
 
 views = Blueprint('views', __name__)
@@ -86,29 +84,6 @@ def user(stat='all'):
         sales = Sale.query.filter_by(
             user_id=current_user.id, status='Done').all()
 
-    print(os.listdir('./website/static/graphs'))
-    if len(os.listdir('./website/static/graphs')) > 0:
-        for file in os.listdir('./website/static/graphs'):
-            os.remove(f'./website/static/graphs/{file}')
-
-    print(os.listdir('./website/static/graphs'))
-
-    # graph 1 value over time
-    date = [sale.date_created.date() for sale in sales]
-    value = [sale.total_value for sale in sales]
-    # for sale in sales:
-    #     date.append(sale.date_created.date())
-    #     value.append(sale.total_value)
-    print(date)
-    print(value)
-    # plt.title('Value Spent')
-    # plt.xlabel('Date')
-    plt.ylabel('Value €')
-    plt.xticks(rotation=45)
-    plt.plot(date, value, color='red')
-    plt.tight_layout()
-    plt.savefig('./website/static/graphs/user1.png', dpi=300, format='png')
-
     return render_template('user.html', user=current_user, sales=sales, cart_session=session["cart"], products=products)
 
 
@@ -149,49 +124,6 @@ def update_user():
 @login_required
 def supplier():
     products = Product.query.filter_by(supplier=current_user.first_name).all()
-    sales = Sale.query.all()
-
-    # hist sold products
-    names = [x.name for x in products]
-    quant = [x.sold for x in products]
-    plt.title(' Products Sold')
-    # # plt.xlabel('Date')
-    plt.ylabel('Quantities')
-    # plt.xticks(rotation=45)
-    plt.bar(names, quant, color='grey')
-    plt.tight_layout()
-    plt.savefig('./website/static/graphs/supp1.png', dpi=300, format='png')
-    plt.close()
-
-    # Sales over time
-    time_ = []
-    value = 0
-    value_list = []
-    for sale in sales:
-        for prod in sale.prod_list:
-            for product in products:
-                if prod.product_id == product.prod_id:
-                    time_.append(sale.date_created.date())
-                    value += product.supplier_price
-                    value_list.append(value)
-
-    print(time_)
-    print(value)
-    print(value_list)
-    plt.title('Sales Over Time')
-    plt.xticks(rotation=45)
-    plt.hist(time_, color='grey')
-    plt.tight_layout()
-    plt.savefig('./website/static/graphs/supp2.png', dpi=300, format='png')
-    plt.close()
-
-    # income over time
-    plt.title('Cumulative Income')
-    plt.xticks(rotation=45)
-    plt.plot(time_, value_list, color='grey')
-    plt.tight_layout()
-    plt.savefig('./website/static/graphs/supp3.png', dpi=300, format='png')
-    plt.close()
 
     return render_template('supplier.html', user=current_user, cart_session=session["cart"], products=products)
 
@@ -322,43 +254,3 @@ def cart_del(prod_id, id):
 def payment(id):
 
     return render_template('payment.html', id=id, user=current_user, cart_session=session["cart"])
-
-
-########################################
-#            NOT IN USE                #
-########################################
-
-
-# @views.route('/delete-note/<id>')
-# def delete_note(id):
-#     note = Note.query.filter_by(id=int(id)).delete()
-#     db.session.commit()
-
-#     return redirect(url_for('views.home'))
-
-
-# @views.route('/make/<type>/<id>')
-# # @login_required
-# def make_supplier(type, id):
-#     user = User.query.filter_by(id=int(id)).first()
-#     if type == 'user':
-#         user.user_type = 'user'
-#     elif type == 'supplier':
-#         user.user_type = 'supplier'
-#     elif type == 'admin':
-#         user.user_type = 'admin'
-#     db.session.add(user)
-#     db.session.commit()
-#     return redirect(url_for('views.admin'))
-
-    # NOT IN USE
-    # if request.method == 'POST':
-    #     note = request.form.get('note')
-
-    #     if len(note) < 1:
-    #         flash('Note is to short', category='error')
-    #     else:
-    #         new_note = Note(data=note, user_id=current_user.id)
-    #         db.session.add(new_note)
-    #         db.session.commit()
-    #         flash('Note added!', category='success')
