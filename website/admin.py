@@ -18,8 +18,6 @@ def admin_():
     users = User.query.all()
     products = Product.query.all()
     sales = Sale.query.all()
-<<<<<<< HEAD
-=======
 
 # Users over time
     time = [x.date_created.date() for x in users]
@@ -63,7 +61,6 @@ def admin_():
 
 
 
->>>>>>> db-change
     return render_template('admin.html', user=current_user, users=users, products=products, sales=sales, cart_session=session["cart"])
 
 
@@ -247,11 +244,6 @@ def sales_management(status="all"):
         sales = Sale.query.filter_by(status='Sent').all()
     elif status == 'done':
         sales = Sale.query.filter_by(status='Done').all()
-<<<<<<< HEAD
-    
-    
-=======
->>>>>>> db-change
 
     return render_template('admin-sales-management.html', user=current_user, users=users, products=products, sales=sales, cart_session=session["cart"])
 

@@ -21,23 +21,6 @@ views = Blueprint('views', __name__)
 def home():
     products = Product.query.all()
 
-<<<<<<< HEAD
-    if current_user.is_authenticated:
-        cart = ast.literal_eval(current_user.cart)
-        cart_len = 0
-        for value in cart.values():
-            cart_len += value
-        session["cart"] = cart_len
-    else:
-        session["cart"] = 0
-
-    ###################################
-    ####     ADD DATA to DB      ######
-    ##################################
-    
-    # add_dummy_data(db=db, User=User, Sale=Sale, Product=Product)
-
-=======
     # add dummy data to db
     if len(products) < 1:
         add_dummy_data(db=db, User=User, Sale=Sale, Product=Product)
@@ -51,7 +34,6 @@ def home():
     else:
         session["cart"] = 0
 
->>>>>>> db-change
     return render_template('home.html', user=current_user, products=products, cart_session=session["cart"])
 
 
@@ -104,9 +86,6 @@ def user(stat='all'):
         sales = Sale.query.filter_by(
             user_id=current_user.id, status='Done').all()
 
-<<<<<<< HEAD
-    return render_template('user.html', user=current_user, sales=sales, cart_session=session["cart"])
-=======
     print(os.listdir('./website/static/graphs'))
     if len(os.listdir('./website/static/graphs')) > 0:
         for file in os.listdir('./website/static/graphs'):
@@ -131,7 +110,6 @@ def user(stat='all'):
     plt.savefig('./website/static/graphs/user1.png', dpi=300, format='png')
 
     return render_template('user.html', user=current_user, sales=sales, cart_session=session["cart"], products=products)
->>>>>>> db-change
 
 
 @views.route('/user/all/update-data', methods=['GET', 'POST'])
@@ -170,12 +148,8 @@ def update_user():
 @views.route('/supplier')
 @login_required
 def supplier():
-<<<<<<< HEAD
-    return render_template('supplier.html', user=current_user, cart_session=session["cart"])
-=======
     products = Product.query.filter_by(supplier=current_user.first_name).all()
     sales = Sale.query.all()
->>>>>>> db-change
 
     # hist sold products
     names = [x.name for x in products]
@@ -240,11 +214,7 @@ def cart(id):
 
     if request.method == 'POST':
         if user.cart != '{}':
-<<<<<<< HEAD
-
-=======
             # get info from order
->>>>>>> db-change
             note = request.form.get('delivery-note')
             payment_method = request.form.get('payment_method')
 
@@ -255,15 +225,6 @@ def cart(id):
                             total_value=0,
                             payment_method=payment_method)
 
-<<<<<<< HEAD
-            print(new_sale.products)
-
-            for product in new_sale.products:
-                product.stock -= 1
-                product.sold += 1
-                new_sale.total_value += product.retail_price
-                new_sale.profit += product.retail_price - product.supplier_price
-=======
             # Update values in new sale
             for prod, quant in cart.items():
                 for product in products:
@@ -273,7 +234,6 @@ def cart(id):
                         new_sale.total_value += product.retail_price * quant
                         new_sale.profit += product.retail_price * \
                             quant - product.supplier_price * quant
->>>>>>> db-change
 
             db.session.add(new_sale)
             db.session.commit()
