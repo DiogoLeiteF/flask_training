@@ -1,3 +1,3 @@
 # Basic Store with Flask
 
-install requirements and run main.py
+install requirements and run app.py
