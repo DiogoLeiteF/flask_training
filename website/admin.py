@@ -12,12 +12,14 @@ admin = Blueprint('admin', __name__)
 @admin.route('/admin')
 @login_required
 def admin_():
-    users = User.query.all()
-    products = Product.query.all()
-    sales = Sale.query.all()
+    if current_user.user_type == 'admin':
 
+        users = User.query.all()
+        products = Product.query.all()
+        sales = Sale.query.all()
 
-    return render_template('admin.html', user=current_user, users=users, products=products, sales=sales, cart_session=session["cart"])
+        return render_template('admin.html', user=current_user, users=users, products=products, sales=sales, cart_session=session["cart"])
+    return redirect(url_for('views.home'))
 
 
 ################################################
@@ -86,14 +88,16 @@ def change_type(id):
 @admin.route('/admin-products-management')
 @login_required
 def products_management():
+    if current_user.user_type == 'admin':
 
-    products = Product.query.all()
+        products = Product.query.all()
 
-    for prod in products:
-        if prod.stock < prod.stock_prev*0.10:
-            flash(
-                f'ATENTION LOW STOCK: Product ID:{prod.prod_id} ||| NAME: {prod.name} ', category='error')
-    return render_template('admin-products-management.html', user=current_user, products=products, cart_session=session["cart"])
+        for prod in products:
+            if prod.stock < prod.stock_prev*0.10:
+                flash(
+                    f'ATENTION LOW STOCK: Product ID:{prod.prod_id} ||| NAME: {prod.name} ', category='error')
+        return render_template('admin-products-management.html', user=current_user, products=products, cart_session=session["cart"])
+    return redirect(url_for('views.home'))
 
 
 @admin.route('/delete-product/<id>')
@@ -186,22 +190,24 @@ def update_prod():
 @admin.route('/admin-sales-management/<status>')
 @login_required
 def sales_management(status="all"):
-    users = User.query.all()
-    products = Product.query.all()
-    if status == 'all':
-        sales = Sale.query.all()
-    elif status == 'awaits-payment':
-        sales = Sale.query.filter_by(status='Awaits Payment').all()
-    elif status == 'awaits-material':
-        sales = Sale.query.filter_by(status='Awaits Material').all()
-    elif status == 'preparation':
-        sales = Sale.query.filter_by(status='Preparation').all()
-    elif status == 'sent':
-        sales = Sale.query.filter_by(status='Sent').all()
-    elif status == 'done':
-        sales = Sale.query.filter_by(status='Done').all()
+    if current_user.user_type == 'admin':
+        users = User.query.all()
+        products = Product.query.all()
+        if status == 'all':
+            sales = Sale.query.all()
+        elif status == 'awaits-payment':
+            sales = Sale.query.filter_by(status='Awaits Payment').all()
+        elif status == 'awaits-material':
+            sales = Sale.query.filter_by(status='Awaits Material').all()
+        elif status == 'preparation':
+            sales = Sale.query.filter_by(status='Preparation').all()
+        elif status == 'sent':
+            sales = Sale.query.filter_by(status='Sent').all()
+        elif status == 'done':
+            sales = Sale.query.filter_by(status='Done').all()
 
-    return render_template('admin-sales-management.html', user=current_user, users=users, products=products, sales=sales, cart_session=session["cart"])
+        return render_template('admin-sales-management.html', user=current_user, users=users, products=products, sales=sales, cart_session=session["cart"])
+    return redirect(url_for('views.home'))
 
 
 @admin.route('/update-sale/<id>')

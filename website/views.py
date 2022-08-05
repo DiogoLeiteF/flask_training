@@ -123,9 +123,12 @@ def update_user():
 @views.route('/supplier')
 @login_required
 def supplier():
-    products = Product.query.filter_by(supplier=current_user.first_name).all()
+    if current_user.user_type == 'admin' or current_user.user_type == 'supplier':
+        products = Product.query.filter_by(
+            supplier=current_user.first_name).all()
 
-    return render_template('supplier.html', user=current_user, cart_session=session["cart"], products=products)
+        return render_template('supplier.html', user=current_user, cart_session=session["cart"], products=products)
+    return redirect(url_for('views.home'))
 
 
 ###########################
