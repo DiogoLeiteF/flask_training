@@ -3,9 +3,8 @@ from flask_login import login_required, current_user
 from website.dummy_data import add_dummy_data
 from .models import Sale_prod_list, User, Product, Sale
 from . import db
-from sqlalchemy import update, text
 import ast
-import matplotlib.pyplot as plt
+
 
 
 views = Blueprint('views', __name__)

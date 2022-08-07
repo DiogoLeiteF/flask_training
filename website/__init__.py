@@ -18,7 +18,6 @@ def create_app():
     from .auth import auth
     from .admin import admin
     from .graph import graph
-    
 
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
@@ -28,8 +27,6 @@ def create_app():
     from .models import User
 
     create_database(app)
-    
-    
 
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'
@@ -51,6 +48,3 @@ def create_database(app):
     # db.drop_all(app=app)
     # db.create_all(app=app)
     # print('Created Database!')
-    
-
-

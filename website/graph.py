@@ -2,7 +2,6 @@ import io
 from time import time
 from flask import Blueprint, Response
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
 from .models import User, Product, Sale
 from flask_login import current_user

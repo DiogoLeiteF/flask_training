@@ -1,3 +1,4 @@
+
 from flask import Blueprint, flash, redirect, render_template, request, flash, session, url_for
 from flask_login import login_required, current_user
 from .models import Sale_prod_list, User, Product, Sale
@@ -44,9 +45,8 @@ def user_search():
         users_list = []
 
         for usr in users:
-            if search in usr.first_name or search in usr.last_name or search == str(usr.id) or search in usr.email or search == str(usr.nif) or search == str(usr.phone) or search in usr.user_type:
+            if search.lower() in usr.first_name.lower() or search in usr.last_name.lower() or search == str(usr.id) or search in usr.email or search == str(usr.nif) or search == str(usr.phone) or search in usr.user_type.lower():
                 users_list.append(usr)
-                print(users_list)
         if users_list == []:
             flash('User NOT found, try again', category='error')
 
