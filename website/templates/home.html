@@ -1,0 +1,52 @@
+{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
+%}
+<header
+  class="site-header section-padding d-flex justify-content-center align-items-center"
+>
+  <div class="site-header">
+    <h1>
+      <span class="choose">Choose your</span>
+      <span class="stuffs">favorite stuff</span>
+    </h1>
+  </div>
+</header>
+
+<!-- products -->
+<div class="products_container">
+  {% for prod in products %}
+
+  <div class="col-lg-4 col-12 mb-3">
+    <div class="product-thumb">
+      <img
+        src="../static/img/{{ prod.prod_id }}.jpeg"
+        class="img-fluid product-image"
+        alt=""
+      />
+      <div class="product-info d-flex">
+        <div>
+          <h5 class="product-title mb-0">{{ prod.name }}</h5>
+
+          <p class="product-p">{{ prod.description }}</p>
+        </div>
+
+        <small class="product-price text-muted ms-auto"
+          >{{ prod.retail_price }} €</small
+        >
+      </div>
+
+      <div>
+        {% if not user.is_authenticated %}
+        <a href="/login" class="btn btn-dark">add to cart</a>
+        {% else %}
+        <a
+          href="/add-to-cart/{{ user.id }}/{{ prod.prod_id }}"
+          class="btn btn-dark"
+          >add to cart</a
+        >
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  {% endfor %} {% endblock %}
+</div>

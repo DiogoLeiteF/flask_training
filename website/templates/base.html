@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Home{% endblock %}</title>
+
+    <!-- bootstrap -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+      crossorigin="anonymous"
+    />
+    <!-- google fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- local css -->
+    <link rel="stylesheet" href="../static/main.css" />
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbar"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbar">
+        <div class="navbar-nav">
+          <span class="nav-item nav-link" id="store_id"
+            >IT<span style="color: red">MEGA</span
+            ><span style="font-size: 0.7rem">store</span></span
+          >
+
+          {% if user.is_authenticated %}
+          <span class="nav-item nav-link"
+            >Hello <b>{{ user.first_name }}</b></span
+          >
+
+          {% if user.user_type == 'user' %}
+          <a class="nav-item nav-link" id="home" href="/">Home</a>
+          <a class="nav-item nav-link" id="user" href="/user/all">User</a>
+          <a class="nav-item nav-link" id="cart" href="/cart/{{ user.id }}"
+            >Cart ({{ cart_session }})</a
+          >
+          <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
+          {% elif user.user_type == 'supplier'%}
+          <a class="nav-item nav-link" id="home" href="/">Home</a>
+          <a class="nav-item nav-link" id="user" href="/user/all">User</a>
+          <a class="nav-item nav-link" id="supplier" href="/supplier"
+            >Supplier</a
+          >
+          <a class="nav-item nav-link" id="cart" href="/cart/{{ user.id }}"
+            >Cart ({{ cart_session }})</a
+          >
+          <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
+          {% elif user.user_type == 'admin'%}
+          <a class="nav-item nav-link" id="home" href="/">Home</a>
+          <a class="nav-item nav-link" id="admin" href="/admin">Admin</a>
+          <a class="nav-item nav-link" id="user" href="/user/all">User</a>
+          <a class="nav-item nav-link" id="cart" href="/cart/{{ user.id }}"
+            >Cart ({{ cart_session }})</a
+          >
+          <a class="nav-item nav-link" id="supplier" href="/supplier"
+            >Supplier</a
+          >
+          <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
+          {% endif %} {% else %}
+          <a class="nav-item nav-link" id="home" href="/">Home</a>
+          <a class="nav-item nav-link" id="login" href="/login">Login</a>
+          <a class="nav-item nav-link" id="signup" href="/sign-up">Sign Up</a>
+
+          <!-- just for testing -->
+
+          <!-- <a class="nav-item nav-link" id="user" href="/user/{{ user.id }}/all"
+            >User</a
+          >
+          <a class="nav-item nav-link" id="cart" href="/cart/{{ user.id }}"
+            >Cart ({{ cart_session }})</a
+          >
+          <a class="nav-item nav-link" id="supplier" href="/supplier"
+            >Supplier</a
+          >
+          <a class="nav-item nav-link" id="admin" href="/admin">Admin</a> -->
+
+          {% endif %}
+        </div>
+      </div>
+    </nav>
+
+    {% if user.user_type == 'admin' %}
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbar2"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbar2">
+        <div class="navbar-nav">
+          <a
+            class="nav-item nav-link"
+            id="users-m"
+            href="/admin-users-management"
+            >Users Management</a
+          >
+          <a
+            class="nav-item nav-link"
+            id="products-m"
+            href="/admin-products-management"
+            >Stock Management</a
+          >
+          <a
+            class="nav-item nav-link"
+            id="sales-m"
+            href="/admin-sales-management/all"
+            >Sales Management</a
+          >
+        </div>
+      </div>
+    </nav>
+    {% endif %}
+
+    <!-- FLASH alert display -->
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %} {% for category, message in messages %} {% if category ==
+    'error' %}
+    <div class="alert alert-danger alert-dismissable fade show" role="alert">
+      {{ message }}
+      <button type="button" class="close" data-dismiss="alert">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    {% else %}
+    <div class="alert alert-success alert-dismissable fade show" role="alert">
+      {{ message }}
+      <button type="button" class="close" data-dismiss="alert">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    {% endif %} {% endfor %} {% endif %} {% endwith %}
+
+    <!-- block content -->
+    <div class="container main">{% block content %} {% endblock %}</div>
+
+    <!-- site footer -->
+    <footer class="site-footer">
+      <div>
+        <span class="nav-item nav-link" id="store_id" align="center"
+          >IT<a href="/" id="mega"><span>MEGA</span></a
+          ><span style="font-size: 0.7rem">store</span></span
+        >
+      </div>
+    </footer>
+
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

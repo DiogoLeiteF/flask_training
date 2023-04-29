@@ -1,0 +1,78 @@
+{% extends "base.html" %} {% block title %}Supplier{% endblock %} {% block
+content %}
+
+<br />
+
+<h1 align="center">Supplier Page</h1>
+<hr />
+
+<!-- User info -->
+<h2 align="center">Supplier Info</h2>
+<div>
+  <p><strong> Name:</strong> {{ user.first_name}} {{user.last_name}}</p>
+  <p><strong> E mail:</strong> {{ user.email }}</p>
+  <p><strong> NIF:</strong> {{ user.nif }}</p>
+  <p><strong> Address:</strong> {{ user.address }}</p>
+  <p><strong> Phone:</strong> {{ user.phone }}</p>
+  <p><strong> User since:</strong> {{ user.date_created }}</p>
+</div>
+<hr />
+<br />
+
+<!-- Display products -->
+
+<h2 align="center">{{ user.first_name }} Products</h2>
+<br />
+
+<div class="container-users">
+  <table id="stock-table">
+    <thead>
+      <tr>
+        <th>Porduct ID</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Supplier</th>
+        <th>Sup. Price</th>
+        <th>Current Stock</th>
+        <th>Sold Items</th>
+        <th>Total Income</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for prod in products %}
+      <tr
+        {%
+        if
+        prod.stock
+        <
+        prod.stock_prev*0.10%}
+        class="low-stock"
+        {%
+        endif
+        %}
+      >
+        <td class="center">{{ prod.prod_id }}</td>
+        <td>{{prod.name }}</td>
+        <td>{{ prod.description }}</td>
+        <td>{{ prod.supplier }}</td>
+        <td class="center">{{ prod.supplier_price }}</td>
+        <td class="center">{{ prod.stock }}</td>
+        <td class="center">{{ prod.sold }}</td>
+        <td class="center">{{ prod.supplier_price * prod.sold }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- STATS -->
+<br />
+
+<h2 align="center">Stats</h2>
+<hr />
+<div class="graph-container">
+  <img src="/supplier.png" alt="" class="graph" />
+</div>
+<hr />
+
+{% endblock %}

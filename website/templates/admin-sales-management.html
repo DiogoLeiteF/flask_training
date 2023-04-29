@@ -1,0 +1,74 @@
+{% extends "base.html" %} {% block title %}Sales Management{% endblock %} {% block content
+%}
+<br />
+
+<h1 align="center">Sales Management</h1>
+<hr />
+<div align="center">
+  <a href="/admin-sales-management/all" class="btn btn-dark">All Sales</a>
+  <a href="/admin-sales-management/awaits-payment" class="btn btn-dark"
+    >Awaits Payment</a
+  >
+  <a href="/admin-sales-management/awaits-material" class="btn btn-dark"
+    >Awaits Material</a
+  >
+  <a href="/admin-sales-management/preparation" class="btn btn-dark"
+    >Preparation</a
+  >
+  <a href="/admin-sales-management/sent" class="btn btn-dark">Sent</a>
+  <a href="/admin-sales-management/done" class="btn btn-dark">Done</a>
+</div>
+<br />
+<div class="container-users">
+  <table id="stock-table">
+    <thead>
+      <tr>
+        <th>Sale ID</th>
+        <th>User ID</th>
+        <th>Cart</th>
+        <th>Created</th>
+        <th>Value</th>
+        <th>Profit</th>
+        <th>Notes</th>
+        <th>Payment</th>
+        <th>Status</th>
+        <th>Change Status</th>
+        <th>Delete Sale</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for sale in sales %}
+      <tr>
+        <td class="center">{{ sale.sale_id }}</td>
+        <td>{{sale.user_id }}</td>
+        <td>
+          {% for sale in sale.prod_list %} {% for product in products %} {% if
+          sale.product_id == product.prod_id %}
+          <li>{{ product.name }}</li>
+          {% endif %} {% endfor %}{% endfor %}
+        </td>
+
+        <!-- <td>{{ sale.material }}</td> -->
+        <td>{{ sale.date_created }}</td>
+        <td class="center">{{ sale.total_value }}</td>
+        <td class="center">{{ sale.profit }}</td>
+        <td>{{ sale.delivery_notes }}</td>
+        <td class="center">{{ sale.payment_method }}</td>
+        <td class="center">{{ sale.status }}</td>
+        <td class="center">
+          <a href="/update-sale/{{ sale.sale_id }}" class="btn btn-dark">
+            Update
+          </a>
+        </td>
+        <td class="center">
+          <a href="/delete-sale/{{ sale.sale_id }}" class="btn btn-danger"
+            >DELETE</a
+          >
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}
