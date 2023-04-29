@@ -1,0 +1,11 @@
+__pycache__/
+myEnvLegion/
+myEnvMate/
+venvMatebookFlaskapp/
+.env
+.flaskenv
+
+
+
+
+
